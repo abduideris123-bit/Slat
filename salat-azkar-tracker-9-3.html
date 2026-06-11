@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="am" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>ሰላት መቆጣጠሪያ</title>
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi4Yqd4Ymx4YiIg4Yqd4Y+V4YiI4YqVIiwiYWJicmV2aWF0aW9uIjoiU2FsYXQiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBkMTExNyIsInRoZW1lX2NvbG9yIjoiI2M5YTg0YyIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnJTIweG1sbnMlM0QnaHR0cCUzQS8vd3d3LnczLm9yZy8yMDAwL3N2ZyclMjB2aWV3Qm94PScwJTIwMCUyMDEwMCUyMDEwMCclM0UlM0NyZWN0JTIwd2lkdGglM0QnMTAwJyUyMGhlaWdodCUzRCcxMDAnJTIwcnglM0QnMjAnJTIwZmlsbCUzRCclMjMwZDExMTclMjcvJTNFJTNDdGV4dCUyMHklM0QnNjglMjInJTIwZm9udC1zaXplPSc2MCclMjB0ZXh0LWFuY2hvciUzRCdtaWRkbGUnJTIweD0nNTAlMjcgeD0nNTAnJTNFJUYwJTlGJTk0JUI1JTNDJTJGdGV4dCUzRSUzQyUyRnN2ZyUzRSIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dfQ==">
+<meta name="theme-color" content="#c9a84c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--surface2:#1e2531;--gold:#c9a84c;--gold-light:#e8c97a;--green:#2ea043;--red:#f85149;--blue:#58a6ff;--text:#e6edf3;--text-muted:#8b949e;--border:#30363d;--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans Ethiopic',system-ui,sans-serif;min-height:100vh;padding-bottom:90px}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700&display=swap');
+
+header{background:linear-gradient(135deg,#0d1117,#1a2035);border-bottom:1px solid var(--border);padding:16px 16px 12px;text-align:center;position:sticky;top:0;z-index:100}
+.header-arabic{font-size:20px;color:var(--gold);letter-spacing:2px;margin-bottom:3px}
+.header-title{font-size:16px;font-weight:700}
+.header-date{font-size:11px;color:var(--text-muted);margin-top:3px}
+
+/* PRAYER COUNTDOWN */
+.next-prayer-bar{background:linear-gradient(135deg,#1a2035,#16213e);border:1px solid var(--gold);border-radius:var(--radius);padding:14px 16px;margin:14px 16px 0;display:flex;align-items:center;gap:14px}
+.np-icon{font-size:28px}
+.np-info{flex:1}
+.np-name{font-size:13px;font-weight:700;color:var(--gold)}
+.np-countdown{font-size:22px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+.np-time{font-size:11px;color:var(--text-muted);margin-top:2px}
+
+.tabs{display:flex;gap:6px;padding:10px 16px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:6px 13px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-family:inherit;font-size:12px;cursor:pointer;transition:all 0.2s}
+.tab.active{background:var(--gold);border-color:var(--gold);color:#0d1117;font-weight:700}
+
+.page{display:none;padding:0 16px}
+.page.active{display:block}
+.section-title{font-size:11px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px}
+
+/* RING */
+.summary-ring{display:flex;justify-content:center;padding:16px 0 8px}
+.ring-wrap{position:relative;width:100px;height:100px}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-num{font-size:24px;font-weight:700;color:var(--gold-light);line-height:1}
+.ring-label{font-size:10px;color:var(--text-muted);margin-top:1px}
+
+/* WORSHIP CARDS */
+.worship-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color 0.2s,background 0.2s}
+.worship-card.done{border-color:var(--green);background:rgba(46,160,67,0.07)}
+.worship-card.missed-alert{border-color:var(--red);background:rgba(248,81,73,0.06)}
+.worship-icon{font-size:22px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border-radius:9px;flex-shrink:0}
+.worship-info{flex:1;min-width:0}
+.worship-name{font-size:14px;font-weight:600}
+.worship-arabic{font-size:11px;color:var(--gold);margin-top:1px}
+.worship-sub{font-size:10px;color:var(--text-muted);margin-top:1px}
+.worship-check{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;font-size:15px}
+.worship-card.done .worship-check{background:var(--green);border-color:var(--green);color:#fff}
+.loc-badge{font-size:9px;padding:2px 6px;border-radius:8px;display:inline-block;margin-top:2px;font-weight:600}
+.loc-badge.masjid{background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid rgba(201,168,76,0.4)}
+.loc-badge.home{background:rgba(88,166,255,0.1);color:#58a6ff;border:1px solid rgba(88,166,255,0.3)}
+
+.streak-banner{background:linear-gradient(135deg,#1a2035,#1e2531);border:1px solid var(--gold);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.streak-icon{font-size:26px}
+.streak-num{font-size:20px;font-weight:700;color:var(--gold-light)}
+.streak-text{font-size:10px;color:var(--text-muted)}
+
+.munafiq-warn{background:rgba(248,81,73,0.1);border:1px solid rgba(248,81,73,0.5);border-radius:var(--radius);padding:10px 14px;font-size:11px;color:#ff7b72;margin-bottom:8px;display:none}
+.munafiq-warn.show{display:block}
+
+.today-masjid-row{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border-radius:10px;padding:9px 13px;margin:6px 0}
+.today-masjid-label{font-size:11px;color:var(--text-muted)}
+.today-masjid-val{font-size:13px;font-weight:700;color:var(--gold)}
+
+/* LOCATION SHEET */
+.location-sheet{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.25s}
+.location-sheet.open{opacity:1;pointer-events:all}
+.location-sheet-inner{background:var(--surface);border-radius:20px 20px 0 0;padding:10px 20px 36px;width:100%;border-top:1px solid var(--border);transform:translateY(100%);transition:transform 0.3s ease}
+.location-sheet.open .location-sheet-inner{transform:translateY(0)}
+.sheet-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:8px auto 16px}
+.location-title{font-size:17px;font-weight:700;text-align:center;margin-bottom:3px}
+.location-subtitle{font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:18px}
+.location-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.loc-btn{padding:20px 10px 16px;border-radius:14px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:30px;cursor:pointer;transition:all 0.2s;text-align:center}
+.loc-btn .loc-btn-label{font-size:13px;font-weight:600;display:block;margin-top:6px}
+.loc-btn.masjid:active{border-color:var(--gold);background:rgba(201,168,76,0.12)}
+.loc-btn.home:active{border-color:#58a6ff;background:rgba(88,166,255,0.1)}
+.loc-cancel{width:100%;padding:12px;background:transparent;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-muted);font-family:inherit;font-size:14px;cursor:pointer}
+
+/* QIBLA */
+.qibla-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;margin-top:14px}
+.qibla-compass{width:200px;height:200px;margin:0 auto 16px;position:relative}
+.qibla-compass svg{width:100%;height:100%}
+.qibla-needle{transform-origin:50% 50%;transition:transform 1s ease}
+.qibla-deg{font-size:28px;font-weight:700;color:var(--gold)}
+.qibla-label{font-size:12px;color:var(--text-muted);margin-top:4px}
+.qibla-locate-btn{margin-top:14px;padding:12px 24px;background:var(--gold);border:none;border-radius:var(--radius);color:#0d1117;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px;text-align:center}
+.stat-num{font-size:26px;font-weight:700;color:var(--gold-light)}
+.stat-label{font-size:11px;color:var(--text-muted);margin-top:3px}
+.bar-row{margin-bottom:10px}
+.bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:3px}
+.bar-track{height:7px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;background:var(--gold);border-radius:4px;transition:width 0.6s ease}
+.bar-fill.green{background:var(--green)}
+
+/* WEEKLY CHART */
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px}
+.chart-title{font-size:13px;font-weight:700;margin-bottom:14px}
+.chart-bars{display:flex;align-items:flex-end;gap:5px;height:100px}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.chart-bar-stack{width:100%;display:flex;flex-direction:column;justify-content:flex-end;gap:1px;height:88px}
+.chart-bar-masjid{background:var(--gold);border-radius:3px 3px 0 0;min-height:2px;transition:height 0.6s ease}
+.chart-bar-home{background:#3a4a6b;min-height:2px;transition:height 0.6s ease}
+.chart-day-label{font-size:9px;color:var(--text-muted);text-align:center}
+.chart-legend{display:flex;gap:14px;justify-content:center;margin-top:10px;font-size:10px;color:var(--text-muted)}
+.chart-legend span{display:flex;align-items:center;gap:4px}
+.chart-legend .dot{width:8px;height:8px;border-radius:2px}
+
+/* MONTHLY CALENDAR */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-nav{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--text);font-family:inherit;font-size:13px;cursor:pointer}
+.cal-title{font-size:14px;font-weight:700}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
+.cal-wd{font-size:9px;color:var(--text-muted);text-align:center;padding:4px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;background:var(--surface2);border:1px solid var(--border);position:relative;cursor:pointer}
+.cal-day.empty{background:transparent;border-color:transparent}
+.cal-day.today{border-color:var(--gold)!important}
+.cal-day.perfect{background:rgba(46,160,67,0.2);border-color:var(--green);color:#56d364}
+.cal-day.good{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.cal-day.partial{background:rgba(88,166,255,0.08);border-color:rgba(88,166,255,0.3);color:#79b8ff}
+.cal-day.missed{background:rgba(248,81,73,0.06);border-color:rgba(248,81,73,0.2);color:#ff7b72}
+.cal-day-num{font-size:12px;font-weight:600}
+.cal-day-dot{font-size:7px;margin-top:1px}
+
+/* ACHIEVEMENTS */
+.achievement-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.ach-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px;text-align:center;transition:border-color 0.3s}
+.ach-card.unlocked{border-color:var(--gold);background:rgba(201,168,76,0.07)}
+.ach-card.locked{opacity:0.45}
+.ach-icon{font-size:32px;margin-bottom:6px}
+.ach-name{font-size:12px;font-weight:700;color:var(--gold)}
+.ach-desc{font-size:10px;color:var(--text-muted);margin-top:3px}
+.ach-progress{height:4px;background:var(--surface2);border-radius:2px;margin-top:8px;overflow:hidden}
+.ach-progress-fill{height:100%;background:var(--gold);border-radius:2px}
+
+/* WEEKLY GOAL */
+.goal-card{background:linear-gradient(135deg,#1a2035,#1a1f2e);border:1px solid var(--gold);border-radius:var(--radius);padding:16px;margin-bottom:10px}
+.goal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.goal-title{font-size:14px;font-weight:700}
+.goal-pct{font-size:24px;font-weight:700;color:var(--gold-light)}
+.goal-track{height:10px;background:var(--surface2);border-radius:5px;overflow:hidden;margin-bottom:8px}
+.goal-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:5px;transition:width 0.8s ease}
+.goal-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-muted)}
+.goal-set-row{display:flex;gap:8px;margin-top:10px}
+.goal-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:14px;padding:9px 12px}
+.goal-save-btn{padding:9px 18px;background:var(--gold);border:none;border-radius:8px;color:#0d1117;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
+
+/* QADA */
+.total-qada-card{background:rgba(248,81,73,0.07);border:1px solid rgba(248,81,73,0.4);border-radius:var(--radius);padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.total-qada-label{font-size:12px;font-weight:600;color:var(--red)}
+.total-qada-num{font-size:24px;font-weight:700;color:var(--red)}
+.qada-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.qada-info{flex:1}
+.qada-name{font-size:13px;font-weight:600}
+.qada-count-big{font-size:11px;color:var(--text-muted);margin-top:1px}
+.qada-controls{display:flex;align-items:center;gap:8px}
+.qada-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;transition:all 0.15s}
+.qada-btn.add{border-color:var(--red);color:var(--red)}
+.qada-btn.done-btn{border-color:var(--green);color:var(--green)}
+.qada-num{font-size:18px;font-weight:700;color:var(--gold);min-width:26px;text-align:center}
+
+/* QURAN */
+.quran-progress-card{background:linear-gradient(135deg,#1a2035,#1a1f2e);border:1px solid rgba(201,168,76,0.4);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.quran-pages-big{font-size:32px;font-weight:700;color:var(--gold-light)}
+.quran-week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:12px}
+.quran-day-dot{aspect-ratio:1;border-radius:7px;background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);border:1px solid var(--border)}
+.quran-day-dot.has-read{background:rgba(201,168,76,0.12);border-color:var(--gold);color:var(--gold-light)}
+.quran-input-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.quran-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.quran-label{font-size:10px;color:var(--text-muted);margin-bottom:3px}
+.quran-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;padding:9px 10px;width:100%}
+.quran-save-btn{width:100%;padding:11px;background:var(--gold);border:none;border-radius:var(--radius);color:#0d1117;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;margin-top:2px}
+
+/* HISTORY */
+.history-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between}
+.history-date{font-size:12px;font-weight:600}
+.history-sub{font-size:10px;color:var(--text-muted);margin-top:1px}
+.history-badges{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end;max-width:150px}
+.badge{font-size:10px;padding:2px 6px;border-radius:20px;background:var(--surface2);color:var(--text-muted);border:1px solid var(--border)}
+.badge.done{background:rgba(46,160,67,0.1);color:#56d364;border-color:var(--green)}
+
+/* REMINDERS */
+.reminder-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:8px}
+.reminder-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.reminder-title{font-size:13px;font-weight:600}
+.toggle{width:44px;height:24px;border-radius:12px;background:var(--border);position:relative;cursor:pointer;transition:background 0.2s;border:none;flex-shrink:0}
+.toggle.on{background:var(--green)}
+.toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:white;top:3px;left:3px;transition:transform 0.2s}
+.toggle.on::after{transform:translateX(20px)}
+.time-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;padding:8px 10px;width:100%}
+
+/* TELEGRAM */
+.telegram-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.tg-btn{width:100%;padding:12px;border:none;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;margin-top:4px;transition:opacity 0.2s}
+.tg-btn:active{opacity:0.8}
+.tg-btn.send{background:#229ED9;color:white}
+.tg-btn.restore{background:var(--surface2);border:1px solid var(--border);color:var(--text)}
+
+/* HADITH */
+.hadith-modal{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:300;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.hadith-modal.open{opacity:1;pointer-events:all}
+.hadith-inner{background:var(--surface);border-radius:24px 24px 0 0;padding:10px 22px 44px;width:100%;border-top:2px solid var(--gold);transform:translateY(100%);transition:transform 0.35s ease;max-height:80vh;overflow-y:auto}
+.hadith-modal.open .hadith-inner{transform:translateY(0)}
+.hadith-handle{width:40px;height:4px;background:var(--gold);border-radius:2px;margin:8px auto 18px;opacity:0.5}
+.hadith-arabic{font-size:17px;color:var(--gold-light);line-height:1.8;margin-bottom:12px;text-align:center;direction:rtl}
+.hadith-amharic{font-size:13px;color:var(--text);line-height:1.7;margin-bottom:8px}
+.hadith-source{font-size:10px;color:var(--text-muted)}
+.hadith-close{width:100%;padding:12px;background:var(--gold);border:none;border-radius:var(--radius);color:#0d1117;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:18px}
+.hadith-fab{position:fixed;bottom:20px;right:16px;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;font-size:22px;cursor:pointer;z-index:150;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(201,168,76,0.35);transition:transform 0.2s}
+.hadith-fab:active{transform:scale(0.92)}
+
+/* INSTALL */
+.install-banner{display:none!important}
+.install-fab{position:fixed;bottom:136px;right:16px;z-index:151;display:flex;flex-direction:column;align-items:center;gap:4px;opacity:1;transition:opacity 0.3s,transform 0.3s;transform:scale(1)}
+.install-fab.hidden{opacity:0;pointer-events:none;transform:scale(0.7)}
+.install-fab-btn{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#1a3060,#2a4090);border:2px solid #4a7aff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(74,122,255,0.45);color:white;transition:transform 0.15s}
+.install-fab-btn:active{transform:scale(0.9)}
+.install-fab-label{font-size:8px;color:#4a7aff;font-weight:700;letter-spacing:0.5px;text-shadow:0 1px 4px rgba(0,0,0,0.8)}
+.install-text{flex:1;font-size:12px;color:var(--text-muted)}
+.install-btn{padding:7px 14px;background:var(--gold);border:none;border-radius:8px;color:#0d1117;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+
+.reset-btn{width:100%;padding:11px;background:transparent;border:1px solid #f85149;border-radius:var(--radius);color:#f85149;font-family:inherit;font-size:13px;cursor:pointer;margin-top:12px;transition:background 0.2s}
+.reset-btn:hover{background:rgba(248,81,73,0.1)}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#2ea043;color:white;padding:9px 18px;border-radius:20px;font-size:12px;font-weight:600;z-index:999;transition:transform 0.3s;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+.week-report-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.week-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+.week-row:last-child{border-bottom:none}
+.week-label{color:var(--text-muted)}
+.week-val{font-weight:700;color:var(--gold)}
+.week-val.good{color:var(--green)}
+.week-val.bad{color:var(--red)}
+
+/* ACCORDION CHECKLIST */
+.acc-wrap{overflow:hidden;max-height:0;transition:max-height 0.35s ease;background:var(--surface2);border-top:1px solid var(--border);border-radius:0 0 var(--radius) var(--radius)}
+.acc-wrap.open{max-height:500px}
+.acc-inner{padding:10px 12px 12px}
+.acc-section{font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin:10px 0 5px}
+.acc-section:first-child{margin-top:2px}
+.acc-row{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:9px;cursor:pointer;transition:background 0.15s;-webkit-tap-highlight-color:transparent}
+.acc-row:active{background:rgba(201,168,76,0.08)}
+.acc-row.checked{background:rgba(46,160,67,0.07)}
+.acc-cb{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;transition:all 0.2s}
+.acc-row.checked .acc-cb{background:var(--green);border-color:var(--green);color:#fff}
+.acc-label{font-size:12px;flex:1}
+.acc-row.checked .acc-label{color:var(--text-muted);text-decoration:line-through}
+.acc-arabic{font-size:10px;color:var(--gold);margin-left:auto;flex-shrink:0}
+.acc-toggle-icon{font-size:11px;color:var(--text-muted);margin-left:6px;flex-shrink:0;transition:transform 0.3s}
+.worship-card.acc-open .acc-toggle-icon{transform:rotate(180deg)}
+.worship-card{border-radius:var(--radius) var(--radius) 0 0}
+.worship-card+.acc-wrap{margin-bottom:8px}
+.worship-card.no-acc{border-radius:var(--radius);margin-bottom:8px}
+
+/* QADA accordion */
+.qada-card{flex-direction:column;align-items:stretch;padding:0;overflow:hidden;cursor:default}
+.qada-card-top{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.qada-acc-wrap{overflow:hidden;max-height:0;transition:max-height 0.35s ease;background:var(--surface2);border-top:1px solid var(--border)}
+.qada-acc-wrap.open{max-height:500px}
+
+.masjid-target-card{background:linear-gradient(135deg,#1a2035,#1a1f2e);border:1px solid var(--gold);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.masjid-track{height:9px;background:var(--surface2);border-radius:5px;overflow:hidden;margin-top:8px}
+.masjid-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:5px;transition:width 0.8s ease}
+
+/* SHEIKH AI */
+.sheikh-modal{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:400;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.sheikh-modal.open{opacity:1;pointer-events:all}
+.sheikh-inner{background:var(--surface);border-radius:24px 24px 0 0;padding:10px 20px 40px;width:100%;border-top:2px solid var(--gold);transform:translateY(100%);transition:transform 0.35s ease;max-height:88vh;display:flex;flex-direction:column}
+.sheikh-modal.open .sheikh-inner{transform:translateY(0)}
+.sheikh-handle{width:40px;height:4px;background:var(--gold);border-radius:2px;margin:8px auto 14px;opacity:0.5}
+.sheikh-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-shrink:0}
+.sheikh-avatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#1a2035,#2a3550);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.sheikh-title{font-size:15px;font-weight:700;color:var(--gold)}
+.sheikh-subtitle{font-size:10px;color:var(--text-muted);margin-top:1px}
+.sheikh-messages{flex:1;overflow-y:auto;margin-bottom:12px;display:flex;flex-direction:column;gap:10px;min-height:120px;max-height:45vh;padding-right:2px}
+.sheikh-msg{padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.65;max-width:92%}
+.sheikh-msg.ai{background:linear-gradient(135deg,#1a2035,#16213e);border:1px solid rgba(201,168,76,0.25);color:var(--text);align-self:flex-start;border-radius:4px 14px 14px 14px}
+.sheikh-msg.user{background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);color:var(--gold-light);align-self:flex-end;border-radius:14px 4px 14px 14px}
+.sheikh-msg.typing{color:var(--text-muted);font-style:italic}
+.sheikh-stats-btn{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:10px;padding:7px 12px;font-size:11px;color:var(--gold);font-family:inherit;cursor:pointer;margin-bottom:10px;width:100%;text-align:left;flex-shrink:0}
+.sheikh-input-row{display:flex;gap:8px;flex-shrink:0}
+.sheikh-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:13px;padding:10px 13px;outline:none;resize:none;min-height:42px;max-height:90px}
+.sheikh-input:focus{border-color:rgba(201,168,76,0.5)}
+.sheikh-send{width:42px;height:42px;border-radius:50%;background:var(--gold);border:none;color:#0d1117;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 0.15s}
+.sheikh-send:active{transform:scale(0.9)}
+.sheikh-send:disabled{opacity:0.4;cursor:not-allowed}
+.sheikh-close-btn{width:100%;padding:11px;background:transparent;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-muted);font-family:inherit;font-size:13px;cursor:pointer;margin-top:10px;flex-shrink:0}
+.sheikh-fab{position:fixed;bottom:78px;right:16px;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#1a3a2a,#1e4a35);border:2px solid #2ea043;font-size:22px;cursor:pointer;z-index:150;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(46,160,67,0.4);transition:transform 0.2s}
+.sheikh-fab:active{transform:scale(0.92)}
+.sheikh-fab-badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;background:#2ea043;border-radius:50%;font-size:9px;color:white;display:flex;align-items:center;justify-content:center;font-weight:700}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-arabic">بسم الله الرحمن الرحيم</div>
+  <div class="header-title">ሰላት እና አዝካር መቆጣጠሪያ</div>
+  <div class="header-date" id="headerDate"></div>
+</header>
+
+<!-- PWA install banner -->
+<div id="installBanner"></div>
+<div class="install-fab hidden" id="installFab">
+  <button class="install-fab-btn" onclick="doInstall()" title="ስልክ ላይ ጫን">📲</button>
+  <span class="install-fab-label">Install</span>
+</div>
+  <button class="install-btn">Install</button>
+</div>
+
+<!-- Next prayer countdown -->
+<div class="next-prayer-bar">
+  <div class="np-icon" id="npIcon">🕌</div>
+  <div class="np-info">
+    <div class="np-name" id="npName">ቀጣይ ሰላት ጊዜ እያሰላ...</div>
+    <div class="np-countdown" id="npCountdown">--:--:--</div>
+    <div class="np-time" id="npTime"></div>
+  </div>
+  <div style="font-size:11px;color:var(--text-muted);text-align:right">
+    <div id="npLocation" style="color:var(--gold);font-size:10px"></div>
+    <button onclick="fetchPrayerTimes()" style="background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-family:inherit;font-size:9px;padding:3px 7px;cursor:pointer;margin-top:4px">🔄</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showPage('today',this)">📅 ዛሬ</button>
+  <button class="tab" onclick="showPage('quran',this)">📖 ቁርአን</button>
+  <button class="tab" onclick="showPage('qada',this)">🚨 ቃዳ</button>
+  <button class="tab" onclick="showPage('goal',this)">🎯 ዒላማ</button>
+  <button class="tab" onclick="showPage('stats',this)">📊 ስታቲስቲክስ</button>
+  <button class="tab" onclick="showPage('calendar',this)">📅 ቀን</button>
+  <button class="tab" onclick="showPage('achievements',this)">🏅 ሽልማት</button>
+  <button class="tab" onclick="showPage('history',this)">📋 ታሪክ</button>
+  <button class="tab" onclick="showPage('settings',this)">⚙️ ቅንብር</button>
+</div>
+
+<!-- TODAY -->
+<div class="page active" id="page-today">
+  <div class="munafiq-warn" id="munafiqWarn">⚠️ <strong>ትኩረት:</strong> ፈጅር ወይም ዒሻ ሰላት አልሰገዱም!</div>
+  <div class="summary-ring">
+    <div class="ring-wrap">
+      <svg width="100" height="100" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#1e2531" stroke-width="9"/>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#c9a84c" stroke-width="9"
+          stroke-dasharray="264" stroke-dashoffset="264" stroke-linecap="round"
+          id="progressCircle" style="transition:stroke-dashoffset 0.6s ease"/>
+      </svg>
+      <div class="ring-center">
+        <div class="ring-num" id="doneCount">0</div>
+        <div class="ring-label">/ 10</div>
+      </div>
+    </div>
+  </div>
+  <div class="streak-banner">
+    <div class="streak-icon">🔥</div>
+    <div>
+      <div class="streak-num" id="streakNum">0</div>
+      <div class="streak-text">ተከታታይ ቀናት ስትሪክ</div>
+    </div>
+  </div>
+  <div class="today-masjid-row">
+    <div class="today-masjid-label">🕌 ዛሬ ጀምዓ/መስጊድ</div>
+    <div class="today-masjid-val" id="todayMasjidCount">0 / 5</div>
+  </div>
+  <div class="section-title">🕋 አምስቱ ፈርዶች</div>
+  <div id="fardCards"></div>
+  <div class="section-title">🕌 ሱና ሰላቶች</div>
+  <div id="sunaCards"></div>
+  <div class="section-title">📿 አዝካር</div>
+  <div id="azkarCards"></div>
+</div>
+
+<!-- QURAN -->
+<div class="page" id="page-quran">
+  <div class="quran-progress-card" style="margin-top:14px">
+    <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px">📖 ዛሬ ያነበቡ</div>
+    <div class="quran-pages-big" id="quranTodayPages">0</div>
+    <div style="font-size:10px;color:var(--text-muted);margin-top:1px" id="quranTodayInfo">ዛሬ ምንም አልተነበበም</div>
+    <div style="margin-top:10px;font-size:10px;color:var(--text-muted)">ይህ ሳምንት</div>
+    <div style="font-size:18px;font-weight:700;color:var(--gold);margin-top:1px" id="quranWeekTotal">0 ፒጅ</div>
+    <div class="quran-week-grid" id="quranWeekGrid"></div>
+  </div>
+  <div class="quran-input-card">
+    <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:10px">📝 ዛሬ ያነበብኩ</div>
+    <div class="quran-row">
+      <div><div class="quran-label">ሱራ</div><input type="text" class="quran-input" id="quranSura" placeholder="አል-ባቀራ..."></div>
+      <div><div class="quran-label">ፒጅ ብዛት</div><input type="number" class="quran-input" id="quranPages" placeholder="0" min="0"></div>
+    </div>
+    <div><div class="quran-label">ከ ፒጅ — እስከ ፒጅ</div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;margin-top:3px">
+        <input type="number" class="quran-input" id="quranFrom" placeholder="ከ">
+        <span style="color:var(--text-muted);font-size:11px">—</span>
+        <input type="number" class="quran-input" id="quranTo" placeholder="እስከ">
+      </div>
+    </div>
+    <button class="quran-save-btn" onclick="saveQuran()">✅ ምዝገባ</button>
+  </div>
+  <div id="quranTodayLog"></div>
+</div>
+
+<!-- QADA -->
+<div class="page" id="page-qada">
+  <div class="section-title" style="margin-top:14px">🚨 ቃዳ ሰላቶች</div>
+  <p style="font-size:11px;color:var(--text-muted);margin-bottom:12px">ያለፈ ጊዜ ያልሰገዱት ሰላቶች ቁጥር ይጨምሩ፤ ቃዳ ሲሰግዱ − ይጫኑ</p>
+  <div class="total-qada-card">
+    <div><div class="total-qada-label">ጠቅላላ ቃዳ</div><div style="font-size:10px;color:var(--text-muted)">ሁሉም ሰላቶች ድምር</div></div>
+    <div class="total-qada-num" id="totalQadaNum">0</div>
+  </div>
+  <div id="qadaContainer"></div>
+</div>
+
+<!-- WEEKLY GOAL -->
+<div class="page" id="page-goal">
+  <div class="section-title" style="margin-top:14px">🎯 ሳምንታዊ ዒላማ — ጀምዓ ሰላት</div>
+  <div class="goal-card">
+    <div class="goal-header">
+      <div><div class="goal-title">ይህ ሳምንት ጀምዓ</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px" id="goalSubtext">0 / 0 ሰላቶች</div></div>
+      <div class="goal-pct" id="goalPct">0%</div>
+    </div>
+    <div class="goal-track"><div class="goal-fill" id="goalFill" style="width:0%"></div></div>
+    <div class="goal-row"><span id="goalStatus">ዒላማ ያስቀምጡ 👇</span></div>
+    <div class="goal-set-row">
+      <input type="number" class="goal-input" id="goalInput" placeholder="ዕለት ዒላማ (ለምሳሌ 25)" min="1" max="35">
+      <button class="goal-save-btn" onclick="saveGoal()">ቀምጥ</button>
+    </div>
+  </div>
+  <!-- Weekly Chart -->
+  <div class="section-title">📊 ሳምንት ቻርት — ጀምዓ vs ቤት</div>
+  <div class="chart-card">
+    <div class="chart-title">ያለፉ 7 ቀናት ሰላቶች</div>
+    <div class="chart-bars" id="weekChart"></div>
+    <div class="chart-legend">
+      <span><div class="dot" style="background:var(--gold)"></div>🕌 ጀምዓ/መስጊድ</span>
+      <span><div class="dot" style="background:#3a4a6b"></div>🏠 ቤት</span>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="page" id="page-stats">
+  <div class="section-title" style="margin-top:14px">ስታቲስቲክስ</div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-num" id="stat-days">0</div><div class="stat-label">ምዝገባ ቀናት</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-streak">0</div><div class="stat-label">ረጅሙ ስትሪክ 🔥</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-perfect">0</div><div class="stat-label">ሙሉ ቀናት ⭐</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-total">0</div><div class="stat-label">ጠቅላላ ተጠናቅቆ</div></div>
+  </div>
+  <div class="section-title" style="margin-top:18px">🕌 መስጊድ ስኬት</div>
+  <div id="masjidStatsContainer" style="margin-top:8px"></div>
+  <div class="section-title" style="margin-top:18px">📊 ሳምንታዊ ሪፖርት</div>
+  <div id="weeklyReportContainer" style="margin-top:8px"></div>
+  <div class="section-title" style="margin-top:18px">እያንዳንዱ ክፍል (%)</div>
+  <div id="barsContainer" style="margin-top:8px"></div>
+</div>
+
+<!-- CALENDAR -->
+<div class="page" id="page-calendar">
+  <div style="margin-top:14px">
+    <div class="cal-header">
+      <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+      <div class="cal-title" id="calTitle"></div>
+      <button class="cal-nav" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-weekdays">
+      <div class="cal-wd">እ</div><div class="cal-wd">ሰ</div><div class="cal-wd">ማ</div>
+      <div class="cal-wd">ረ</div><div class="cal-wd">ሐ</div><div class="cal-wd">ዓ</div><div class="cal-wd">ቅ</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;font-size:10px">
+      <span style="color:#56d364">⬛ 10/10</span>
+      <span style="color:var(--gold)">⬛ 7–9</span>
+      <span style="color:#79b8ff">⬛ 4–6</span>
+      <span style="color:#ff7b72">⬛ 1–3</span>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div class="page" id="page-achievements">
+  <div class="section-title" style="margin-top:14px">🏅 ሽልማቶች</div>
+  <div class="achievement-grid" id="achGrid"></div>
+</div>
+
+<!-- HISTORY -->
+<div class="page" id="page-history">
+  <div class="section-title" style="margin-top:14px">ታሪክ (ያለፉ 30 ቀናት)</div>
+  <div id="historyList"></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+  <div class="section-title" style="margin-top:14px">🔔 ማሳወቂያ</div>
+  <!-- Mosque alert permission card -->
+  <div style="background:linear-gradient(135deg,#1a2035,#1a1f2e);border:1px solid rgba(201,168,76,0.4);border-radius:var(--radius);padding:14px;margin-bottom:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--gold)">🕌 መስጊድ ምልክት</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:2px">ሰላት ሰዓት 15 ደቂቃ ቀደም "ወደ ጀምዓ ሂድ!" ምልክት</div>
+      </div>
+      <span id="notifPermBadge" style="font-size:10px;padding:3px 8px;border-radius:20px;background:var(--surface2);border:1px solid var(--border)">...</span>
+    </div>
+    <button onclick="initNotifications()" style="width:100%;padding:10px;background:var(--gold);border:none;border-radius:10px;color:#0d1117;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">🔔 ምልክት አብራ / ፈቃድ ስጥ</button>
+  </div>
+  <div id="remindersContainer"></div>
+
+  <div class="section-title" style="margin-top:18px">📡 Backup & Restore</div>
+  <div style="background:linear-gradient(135deg,#1a2035,#1a1f2e);border:1px solid rgba(201,168,76,0.3);border-radius:var(--radius);padding:14px;margin-bottom:10px">
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">ሁሉም ዳታ (ሰላቶች፣ ቃዳ፣ ቁርአን፣ አዝካር) JSON ፋይል ሆኖ Telegram ይላካል</div>
+    <button onclick="backupToTelegram()" style="width:100%;padding:11px;background:var(--gold);border:none;border-radius:10px;color:#0d1117;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px">📤 Telegram Backup ላክ</button>
+    <div style="font-size:10px;color:var(--text-muted);margin-bottom:10px;text-align:center">— ወይም ፋይል ከ Telegram አውርደህ import አድርግ —</div>
+    <label style="width:100%;display:block">
+      <div style="width:100%;padding:11px;background:var(--surface2);border:1px dashed rgba(201,168,76,0.4);border-radius:10px;color:var(--gold);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:center;box-sizing:border-box">📥 JSON ፋይል Import (Restore)</div>
+      <input type="file" accept=".json" onchange="importBackupFile(event)" style="display:none">
+    </label>
+    <div id="importStatus" style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:8px;min-height:16px"></div>
+  </div>
+
+  <div class="section-title" style="margin-top:18px">⚠️ ዳታ</div>
+  <button class="reset-btn" onclick="resetToday()">🗑️ ዛሬ ዳግም አስጀምር</button>
+  <button class="reset-btn" onclick="resetAll()" style="margin-top:8px;border-color:#8b949e;color:#8b949e">🗄️ ሁሉም ዳታ ሰርዝ</button>
+</div>
+
+<!-- LOCATION SHEET -->
+<div class="location-sheet" id="locationSheet" onclick="handleSheetClick(event)">
+  <div class="location-sheet-inner">
+    <div class="sheet-handle"></div>
+    <div class="location-title">የት ሰገዱ?</div>
+    <div class="location-subtitle" id="locationSheetSubtitle"></div>
+    <div class="location-btns">
+      <button class="loc-btn masjid" onclick="selectLocation('masjid')">🕌<span class="loc-btn-label">መስጊድ (ጀምዓ)</span></button>
+      <button class="loc-btn home" onclick="selectLocation('home')">🏠<span class="loc-btn-label">ቤት</span></button>
+    </div>
+    <button class="loc-cancel" onclick="closeSheet()">ሰርዝ</button>
+  </div>
+</div>
+
+<!-- HADITH MODAL -->
+<div class="hadith-modal" id="hadithModal" onclick="handleHadithClick(event)">
+  <div class="hadith-inner">
+    <div class="hadith-handle"></div>
+    <div style="font-size:10px;color:var(--gold);font-weight:600;letter-spacing:1px;margin-bottom:8px">💡 ዕለታዊ ሃዲስ</div>
+    <div class="hadith-arabic" id="hadithArabic"></div>
+    <div class="hadith-amharic" id="hadithAmharic"></div>
+    <div class="hadith-source" id="hadithSource"></div>
+    <button class="hadith-close" onclick="closeHadith()">✓ ተቀብዬ ጀምራለሁ</button>
+  </div>
+</div>
+
+<!-- SHEIKH AI MODAL -->
+<div class="sheikh-modal" id="sheikhModal" onclick="handleSheikhModalClick(event)">
+  <div class="sheikh-inner" id="sheikhInner">
+    <div class="sheikh-handle"></div>
+    <div class="sheikh-header">
+      <div class="sheikh-avatar">🧕</div>
+      <div>
+        <div class="sheikh-title">شيخ AI — ሼክ አኢ</div>
+        <div class="sheikh-subtitle">የሙስሊም ወጣት ምክረኛ · ጥያቄዎን ይጠይቁ</div>
+      </div>
+    </div>
+    <div class="sheikh-messages" id="sheikhMessages">
+      <div class="sheikh-msg ai">
+        السلام عليكم ورحمة الله وبركاته 🌙<br><br>
+        እኔ ሼክ AI ነኝ — የሙስሊም ወጣቱ ጉዞ ጠያቂ። ስለ ሰላት፣ ሃዲስ፣ ዕለታዊ ሕይወት፣ ወይም ዒባዳ ጥያቄ ይጠይቁ።<br><br>
+        ወይም ዛሬ ሰላቶቼን ይዩ ↓
+      </div>
+    </div>
+    <button class="sheikh-stats-btn" onclick="sendSheikhStats()">📊 ዛሬ ሰላቶቼን ተመልክተህ ምክር ስጠኝ</button>
+    <div class="sheikh-input-row">
+      <textarea class="sheikh-input" id="sheikhInput" placeholder="ጥያቄ ጠይቁ... (ለምሳሌ: ፈጅር ሰጅቼ ዞርኩ ምን ያዘዘኝ?)" rows="1" onkeydown="sheikhKeydown(event)"></textarea>
+      <button class="sheikh-send" id="sheikhSend" onclick="sendSheikhMessage()">➤</button>
+    </div>
+    <button class="sheikh-close-btn" onclick="closeSheikhModal()">✕ ዝጋ</button>
+  </div>
+</div>
+
+<button class="sheikh-fab" onclick="openSheikhModal()" title="ሼክ AI">
+  🧕
+  <div class="sheikh-fab-badge">AI</div>
+</button>
+
+<button class="hadith-fab" onclick="openHadith()">📿</button>
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+const TG_BOT   = '2009893419:AAFE6nldwRA2ZrSx9U0UNF2W9b76w7UmOlc';
+const TG_CHAT  = '1060051687';
+
+const ITEMS = [
+  {id:'fajr',    name:'የፈጅር ሰላት',   arabic:'صلاة الفجر',   icon:'🌄', group:'fard', defaultTime:'05:00'},
+  {id:'dhuhr',   name:'የዙህር ሰላት',   arabic:'صلاة الظهر',   icon:'🕛', group:'fard', defaultTime:'12:30'},
+  {id:'asr',     name:'የአስር ሰላት',   arabic:'صلاة العصر',   icon:'🌤️', group:'fard', defaultTime:'15:30'},
+  {id:'maghrib', name:'የመግሪብ ሰላት', arabic:'صلاة المغرب',  icon:'🌇', group:'fard', defaultTime:'18:30'},
+  {id:'isha',    name:'የዒሻ ሰላት',    arabic:'صلاة العشاء',  icon:'🌃', group:'fard', defaultTime:'20:00'},
+  {id:'jamaa',   name:'ጀምዓ ሰላት',   arabic:'صلاة الجماعة', icon:'🕌', group:'suna', defaultTime:'12:30'},
+  {id:'layl',    name:'ለይሉ ሰላት',    arabic:'صلاة الليل',   icon:'🌙', group:'suna', defaultTime:'03:00'},
+  {id:'duha',    name:'አዱሃ ሰላት',    arabic:'صلاة الضحى',  icon:'☀️', group:'suna', defaultTime:'08:00'},
+  {id:'morning', name:'የጠዋት አዝካር', arabic:'أذكار الصباح', icon:'🌅', group:'azkar',defaultTime:'06:00'},
+  {id:'evening', name:'የማታ አዝካር', arabic:'أذكار المساء', icon:'🌆', group:'azkar',defaultTime:'17:30'},
+];
+const FARD_IDS = ['fajr','dhuhr','asr','maghrib','isha'];
+const SALAT_IDS= ['fajr','dhuhr','asr','maghrib','isha','jamaa','layl','duha'];
+const QADA_PRAYERS = [
+  {id:'fajr',icon:'🌄',name:'ፈጅር'},{id:'dhuhr',icon:'🕛',name:'ዙህር'},
+  {id:'asr',icon:'🌤️',name:'አስር'},{id:'maghrib',icon:'🌇',name:'መግሪብ'},
+  {id:'isha',icon:'🌃',name:'ዒሻ'},{id:'witr',icon:'⭐',name:'ዊትር'},
+];
+const HADITHS = [
+  {arabic:'مَنْ صَلَّى الصُّبْحَ فَهُوَ فِي ذِمَّةِ اللَّهِ',amharic:'ፈጅርን የሰገደ ሰው በአላህ ዋስትና ውስጥ ነው።',source:'ሙስሊም — 657'},
+  {arabic:'صَلَاةُ الجَمَاعَةِ أَفْضَلُ مِنْ صَلَاةِ الفَذِّ بِسَبْعٍ وَعِشْرِينَ دَرَجَةً',amharic:'የጀምዓ ሰላት ከብቸኛ ሰላት 27 እጥፍ ይበልጣል።',source:'ቡካሪ — 645'},
+  {arabic:'مَنْ غَدَا إِلَى الْمَسْجِدِ أَوْ رَاحَ، أَعَدَّ اللَّهُ لَهُ فِي الْجَنَّةِ نُزُلًا',amharic:'ወደ መስጊድ ጥዋት ወይም ማታ የሄደ ሰው — አላህ ለእርሱ ጀነት ውስጥ እንግዳ መቀበያ ያዘጋጃል።',source:'ቡካሪ — 662'},
+  {arabic:'مَنْ قَرَأَ حَرْفًا مِنْ كِتَابِ اللهِ فَلَهُ بِهِ حَسَنَةٌ',amharic:'ቁርአን አንድ ፊደል ያነበበ ሰው — አንድ ሐሰና ያገኛል፤ አንዱ ሐሰና 10 እጥፍ ይሆናል።',source:'ቲርሚዚ — 2910'},
+  {arabic:'أَثْقَلُ الصَّلَاةِ عَلَى الْمُنَافِقِينَ صَلَاةُ الْعِشَاءِ وَصَلَاةُ الفَجْرِ',amharic:'ለምናፍቃን ከሁሉ ከባድ ሰላቶች የዒሻ እና የፈጅር ሰላቶች ናቸው።',source:'ቡካሪ — 657'},
+  {arabic:'مَنْ صَلَّى الْبَرْدَيْنِ دَخَلَ الْجَنَّةَ',amharic:'ሁለቱን ቀዝቃዛ ሰላቶች (ፈጅር እና አስር) የሰገደ ሰው ጀነት ይገባል።',source:'ቡካሪ — 574'},
+  {arabic:'رَكْعَتَا الفَجْرِ خَيْرٌ مِنَ الدُّنْيَا وَمَا فِيهَا',amharic:'የፈጅር ሱና ሁለት ረከዓ ከዱንያ ሁሉ ይበልጣሉ።',source:'ሙስሊም — 725'},
+];
+const ACHIEVEMENTS = [
+  {id:'streak7',  icon:'🔥', name:'7 ቀን ስትሪክ',    desc:'7 ተከታታይ ቀናት ሰጅዷል', check:s=>s.streak>=7,   max:7,   val:s=>Math.min(s.streak,7)},
+  {id:'streak30', icon:'💎', name:'30 ቀን ስትሪክ',   desc:'30 ተከታታይ ቀናት',       check:s=>s.streak>=30,  max:30,  val:s=>Math.min(s.streak,30)},
+  {id:'jamaa7',   icon:'🕌', name:'7 ቀን ሙሉ ጀምዓ',  desc:'7 ቀን ሙሉ ፈርዶች ጀምዓ',  check:s=>s.jamaa7>=7,   max:7,   val:s=>Math.min(s.jamaa7,7)},
+  {id:'jamaa30',  icon:'🏅', name:'30 ቀን ጀምዓ',    desc:'30 ቀን ጀምዓ ሰጅዷል',    check:s=>s.jamaa30>=30, max:30,  val:s=>Math.min(s.jamaa30,30)},
+  {id:'perfect7', icon:'⭐', name:'7 ሙሉ ቀን',       desc:'7 ቀን 10/10 ሰጅዷል',   check:s=>s.perfect>=7,  max:7,   val:s=>Math.min(s.perfect,7)},
+  {id:'quran7',   icon:'📖', name:'7 ቀን ቁርአን',    desc:'7 ቀን ቁርአን ተነቧል',    check:s=>s.quranDays>=7,max:7,   val:s=>Math.min(s.quranDays,7)},
+  {id:'days100',  icon:'🌙', name:'100 ቀን',         desc:'100 ቀን ምዝገባ',         check:s=>s.totalDays>=100,max:100,val:s=>Math.min(s.totalDays,100)},
+  {id:'fajr30',   icon:'🌄', name:'30 ቀን ፈጅር',    desc:'30 ቀን ፈጅር ሰጅዷል',    check:s=>s.fajr30>=30,  max:30,  val:s=>Math.min(s.fajr30,30)},
+];
+
+// Prayer times (static Addis Ababa — updated monthly or via API)
+const PRAYER_SCHEDULE = {
+  fajr:'05:05', dhuhr:'12:20', asr:'15:30', maghrib:'18:25', isha:'19:45'
+};
+const PRAYER_NAMES_AM = {fajr:'ፈጅር',dhuhr:'ዙህር',asr:'አስር',maghrib:'መግሪብ',isha:'ዒሻ'};
+const PRAYER_ICONS    = {fajr:'🌄',dhuhr:'🕛',asr:'🌤️',maghrib:'🌇',isha:'🌃'};
+
+let pendingLocationId = null;
+let installPrompt = null;
+let prayerTimesData = null;
+let calendarMonth = new Date().getMonth(), calendarYear = new Date().getFullYear();
+
+// ============================================================
+// UTILS
+function todayKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function dateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function loadData(){return JSON.parse(localStorage.getItem('salat_data')||'{}');}
+function saveData(d){localStorage.setItem('salat_data',JSON.stringify(d));}
+function getTodayState(){const d=loadData();return d[todayKey()]||{};}
+// ============================================================
+// TELEGRAM
+const SALAT_NAMES_FULL = {
+  fajr:'ፈጅር 🌄', dhuhr:'ዙህር 🕛', asr:'አስር 🌤️',
+  maghrib:'መግሪብ 🌇', isha:'ዒሻ 🌃',
+  jamaa:'ጀምዓ 🕌', layl:'ሌሊት ሰላት 🌙',
+  duha:'አዱሃ ☀️', morning:'ጠዋት አዝካር 📿', evening:'ምሽት አዝካር 📿'
+};
+
+async function sendToTelegram(msg){
+  try{
+    await fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:TG_CHAT, text:msg, parse_mode:'HTML'})
+    });
+  }catch(e){console.warn('Telegram error:',e);}
+}
+
+function buildSalatMessage(id, location){
+  const name = SALAT_NAMES_FULL[id] || id;
+  const locLabel = location==='masjid'?'🕌 መስጊድ (ጀምዓ)': location==='home'?'🏠 ቤት':'✅ ተጠናቀቀ';
+  const now = new Date();
+  const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const streak = calcStreak();
+  return `🤲 <b>ሰላት ተሰግዷል!</b>
+
+🕐 ሰዓት: <b>${timeStr}</b>
+📿 ሰላት: <b>${name}</b>
+📍 ቦታ: <b>${locLabel}</b>
+🔥 ስትሪክ: <b>${streak} ቀናት</b>
+
+الحمد لله — አልሃምዱሊሏህ ✨`;
+}
+
+// ============================================================
+function setItem(id,done,location){
+  const data=loadData(),key=todayKey();
+  if(!data[key])data[key]={};
+  if(done){const now=new Date();data[key][id]={done:true,time:`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`,location:location||null};}
+  else delete data[key][id];
+  saveData(data);
+}
+
+// ============================================================
+// PRAYER TIME COUNTDOWN
+function parsePrayerTimes(){
+  const times = prayerTimesData || PRAYER_SCHEDULE;
+  const now = new Date();
+  const today = [];
+  Object.entries(times).forEach(([id,t])=>{
+    const[h,m]=t.split(':').map(Number);
+    const dt=new Date(now);dt.setHours(h,m,0,0);
+    today.push({id,name:PRAYER_NAMES_AM[id],icon:PRAYER_ICONS[id],dt,timeStr:t});
+  });
+  today.sort((a,b)=>a.dt-b.dt);
+  return today;
+}
+
+function updateCountdown(){
+  const prayers = parsePrayerTimes();
+  const now = new Date();
+  let next = prayers.find(p=>p.dt>now);
+  if(!next){next=prayers[0];next.dt=new Date(next.dt.getTime()+86400000);}
+  const diff = next.dt - now;
+  const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+  document.getElementById('npIcon').textContent=next.icon;
+  document.getElementById('npName').textContent=`ቀጣይ: ${next.name}`;
+  document.getElementById('npCountdown').textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  document.getElementById('npTime').textContent=`${next.timeStr} ላይ`;
+}
+
+async function fetchPrayerTimes(){
+  document.getElementById('npName').textContent='ጊዜ እያስሎ...';
+  try{
+    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:8000}));
+    const{latitude:lat,longitude:lng}=pos.coords;
+    const d=new Date();
+    const url=`https://api.aladhan.com/v1/timings/${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}?latitude=${lat}&longitude=${lng}&method=3`;
+    const r=await fetch(url);const j=await r.json();
+    const t=j.data.timings;
+    prayerTimesData={fajr:t.Fajr,dhuhr:t.Dhuhr,asr:t.Asr,maghrib:t.Maghrib,isha:t.Isha};
+    localStorage.setItem('prayer_times',JSON.stringify({data:prayerTimesData,date:todayKey()}));
+    document.getElementById('npLocation').textContent=`📍 GPS ሰዓት`;
+    showToast('✅ የሰላት ሰዓቶች ተሰኘ!');
+  }catch(e){
+    const saved=localStorage.getItem('prayer_times');
+    if(saved){const p=JSON.parse(saved);prayerTimesData=p.data;document.getElementById('npLocation').textContent='💾 ቀዳሚ ሰዓት';}
+    else{document.getElementById('npLocation').textContent='📍 አዲስ አበባ ነባሪ';}
+    showToast('⚠️ GPS አልተሰጠም — ነባሪ ሰዓት');
+  }
+}
+
+// ============================================================
+// QIBLA
+function initQibla(){
+  const card=document.getElementById('page-qibla');
+  if(!card)return;
+}
+async function locateQibla(){
+  showToast('📍 ቦታ እየፈለገ...');
+  try{
+    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:8000}));
+    const{latitude:lat,longitude:lng}=pos.coords;
+    // Kaaba coordinates
+    const kLat=21.4225,kLng=39.8262;
+    const dLng=(kLng-lng)*Math.PI/180;
+    const lat1=lat*Math.PI/180,lat2=kLat*Math.PI/180;
+    const y=Math.sin(dLng)*Math.cos(lat2);
+    const x=Math.cos(lat1)*Math.sin(lat2)-Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLng);
+    let bearing=Math.atan2(y,x)*180/Math.PI;
+    bearing=(bearing+360)%360;
+    document.getElementById('qiblaDeg').textContent=Math.round(bearing)+'°';
+    document.getElementById('qiblaLabel').textContent='የቀብላ አቅጣጫ ከሰሜን';
+    // Rotate needle
+    const needle=document.getElementById('qiblaNeedle');
+    if(needle)needle.style.transform=`rotate(${bearing}deg)`;
+    showToast(`🕋 ቀብላ: ${Math.round(bearing)}°`);
+  }catch(e){showToast('⚠️ GPS ፍቃድ ያስፈልጋል');}
+}
+
+// ============================================================
+// ACCORDION CHECKLIST DATA
+const ACC_ITEMS = {
+  fajr: {
+    suna:  [{id:'fajr_s1', label:'የፈጅር ሱና (2 ረከዓ)', arabic:'سنة الفجر'}],
+    azkar: [{id:'fajr_az1',label:'የጠዋት አዝካር',        arabic:'أذكار الصباح'}],
+    quran: [{id:'fajr_q1', label:'ቁርአን አነበበ',        arabic:'قراءة القرآن'}],
+  },
+  dhuhr: {
+    suna:  [{id:'dhr_s1',label:'የዙህር ቅድም ሱና (4 ረከዓ)',arabic:'سنة قبلية'},{id:'dhr_s2',label:'የዙህር ኋለኛ ሱና (2 ረከዓ)',arabic:'سنة بعدية'}],
+    azkar: [{id:'dhr_az1',label:'የዙህር ኋለኛ አዝካር',arabic:'أذكار بعد الصلاة'}],
+    quran: [{id:'dhr_q1', label:'ቁርአን አነበበ',arabic:'قراءة القرآن'}],
+  },
+  asr: {
+    suna:  [{id:'asr_s1',label:'የአስር ሱና (4 ረከዓ)',arabic:'سنة قبل العصر'}],
+    azkar: [{id:'asr_az1',label:'የአስር ኋለኛ አዝካር',arabic:'أذكار بعد الصلاة'}],
+    quran: [],
+  },
+  maghrib: {
+    suna:  [{id:'mgr_s1',label:'የመግሪብ ኋለኛ ሱና (2 ረከዓ)',arabic:'سنة بعدية'}],
+    azkar: [{id:'mgr_az1',label:'የምሽት አዝካር',arabic:'أذكار المساء'},{id:'mgr_az2',label:'አያቱ ኩርሲ ደጋግሞ',arabic:'آية الكرسي'}],
+    quran: [{id:'mgr_q1',label:'ሱራ ሙልክ ቀርዓ',arabic:'سورة الملك'}],
+  },
+  isha: {
+    suna:  [{id:'ish_s1',label:'የዒሻ ኋለኛ ሱና (2 ረከዓ)',arabic:'سنة بعدية'},{id:'ish_s2',label:'ዊትር ሰላት',arabic:'صلاة الوتر'}],
+    azkar: [{id:'ish_az1',label:'የምሽት አዝካር',arabic:'أذكار المساء'},{id:'ish_az2',label:'3× ሱራ ኢኽላስ + ፈለቅ + ናስ',arabic:'المعوذات'}],
+    quran: [{id:'ish_q1',label:'ቁርአን አነበበ',arabic:'قراءة القرآن'}],
+  },
+  jamaa: {
+    suna:  [{id:'jma_s1',label:'ሱና ቀጥሎ ሰጀደ',arabic:'السنة الراتبة'}],
+    azkar: [{id:'jma_az1',label:'ኋለኛ አዝካር ሙሉ',arabic:'أذكار بعد الصلاة'}],
+    quran: [],
+  },
+  layl: {
+    suna:  [{id:'lyl_s1',label:'ተሐጁድ/ቂያሙ ሌሊት',arabic:'قيام الليل'}],
+    azkar: [{id:'lyl_az1',label:'ዱዓ + ኢስቲግፋር',arabic:'الدعاء والاستغفار'}],
+    quran: [{id:'lyl_q1',label:'ቁርአን ዝምምታ አነበበ',arabic:'قراءة القرآن'}],
+  },
+  duha: {
+    suna:  [{id:'dha_s1',label:'አዱሃ (2–8 ረከዓ)',arabic:'صلاة الضحى'}],
+    azkar: [{id:'dha_az1',label:'ሱብሓናሏህ 100 ጊዜ',arabic:'التسبيح'}],
+    quran: [],
+  },
+  morning: {
+    suna:  [],
+    azkar: [{id:'mor_az1',label:'አያቱ ኩርሲ × 1',arabic:'آية الكرسي'},{id:'mor_az2',label:'ሱራ ኢኽላስ × 3',arabic:'الإخلاص'},{id:'mor_az3',label:'ሱብሓናሏህ × 33',arabic:'التسبيح'},{id:'mor_az4',label:'አልሃምዱሊሏህ × 33',arabic:'التحميد'},{id:'mor_az5',label:'አሏሁ አክበር × 34',arabic:'التكبير'}],
+    quran: [{id:'mor_q1',label:'ቁርአን ጠዋት',arabic:'قراءة القرآن'}],
+  },
+  evening: {
+    suna:  [],
+    azkar: [{id:'eve_az1',label:'አያቱ ኩርሲ × 1',arabic:'آية الكرسي'},{id:'eve_az2',label:'ሱራ ኢኽላስ × 3',arabic:'الإخلاص'},{id:'eve_az3',label:'ሱብሓናሏህ × 33',arabic:'التسبيح'},{id:'eve_az4',label:'አልሃምዱሊሏህ × 33',arabic:'التحميد'},{id:'eve_az5',label:'አሏሁ አክበር × 34',arabic:'التكبير'}],
+    quran: [{id:'eve_q1',label:'ቁርአን ምሽት',arabic:'قراءة القرآن'}],
+  },
+};
+
+// Load/save accordion checklist state
+function loadAccData(){return JSON.parse(localStorage.getItem('acc_data')||'{}');}
+function saveAccData(d){localStorage.setItem('acc_data',JSON.stringify(d));}
+function toggleAccItem(parentId, itemId){
+  const data=loadAccData(), key=todayKey();
+  if(!data[key])data[key]={};
+  data[key][itemId]=!data[key][itemId];
+  saveAccData(data);
+  // Update UI
+  const row=document.getElementById('accrow-'+itemId);
+  const cb=document.getElementById('acccb-'+itemId);
+  if(!row||!cb)return;
+  const checked=data[key][itemId];
+  row.classList.toggle('checked',checked);
+  cb.textContent=checked?'✓':'';
+}
+
+function buildAccordionHTML(itemId){
+  const acc=ACC_ITEMS[itemId];
+  if(!acc)return '';
+  const data=loadAccData(),key=todayKey(),today=data[key]||{};
+  let html='';
+  const sections=[{label:'🌟 ሱና ሰላቶች',items:acc.suna},{label:'📿 አዝካር',items:acc.azkar},{label:'📖 ቁርአን',items:acc.quran}];
+  sections.forEach(sec=>{
+    if(!sec.items||sec.items.length===0)return;
+    html+=`<div class="acc-section">${sec.label}</div>`;
+    sec.items.forEach(it=>{
+      const checked=!!today[it.id];
+      html+=`<div class="acc-row${checked?' checked':''}" id="accrow-${it.id}" onclick="event.stopPropagation();toggleAccItem('${itemId}','${it.id}')">
+        <div class="acc-cb" id="acccb-${it.id}">${checked?'✓':''}</div>
+        <div class="acc-label">${it.label}</div>
+        <div class="acc-arabic">${it.arabic}</div>
+      </div>`;
+    });
+  });
+  return html;
+}
+
+function toggleAccordion(itemId, wrapId){
+  const wrap=document.getElementById(wrapId);
+  const card=document.getElementById('card-'+itemId);
+  if(!wrap)return;
+  const isOpen=wrap.classList.contains('open');
+  wrap.classList.toggle('open',!isOpen);
+  if(card)card.classList.toggle('acc-open',!isOpen);
+}
+
+// ============================================================
+// RENDER TODAY
+function buildCards(){
+  const fardEl=document.getElementById('fardCards');
+  const sunaEl=document.getElementById('sunaCards');
+  const azkarEl=document.getElementById('azkarCards');
+  fardEl.innerHTML='';sunaEl.innerHTML='';azkarEl.innerHTML='';
+  ITEMS.forEach(item=>{
+    const hasAcc=ACC_ITEMS[item.id]&&(ACC_ITEMS[item.id].suna.length+ACC_ITEMS[item.id].azkar.length+ACC_ITEMS[item.id].quran.length)>0;
+    const wrapId='accwrap-'+item.id;
+    const wrapper=document.createElement('div');
+    wrapper.style.marginBottom='8px';
+    const el=document.createElement('div');
+    el.className='worship-card'+(hasAcc?'':' no-acc');
+    el.style.marginBottom='0';
+    el.id='card-'+item.id;
+    el.innerHTML=`<div class="worship-icon">${item.icon}</div>
+      <div class="worship-info">
+        <div class="worship-name">${item.name}</div>
+        <div class="worship-arabic">${item.arabic}</div>
+        <div class="worship-sub" id="sub-${item.id}"></div>
+      </div>
+      <div class="worship-check" id="check-${item.id}"></div>
+      ${hasAcc?`<div class="acc-toggle-icon" id="acctoggle-${item.id}">&#9662;</div>`:''}`;
+    el.onclick=()=>toggle(item.id);
+    if(hasAcc){
+      const accWrap=document.createElement('div');
+      accWrap.className='acc-wrap';
+      accWrap.id=wrapId;
+      accWrap.innerHTML='<div class="acc-inner">'+buildAccordionHTML(item.id)+'</div>';
+      accWrap.onclick=(e)=>e.stopPropagation();
+      const toggleIcon=el.querySelector('.acc-toggle-icon');
+      if(toggleIcon){toggleIcon.onclick=(e)=>{e.stopPropagation();toggleAccordion(item.id,wrapId);};}
+      wrapper.appendChild(el);
+      wrapper.appendChild(accWrap);
+    } else {
+      wrapper.appendChild(el);
+    }
+    if(item.group==='fard')fardEl.appendChild(wrapper);
+    else if(item.group==='suna')sunaEl.appendChild(wrapper);
+    else azkarEl.appendChild(wrapper);
+  });
+}
+
+function render(){
+  const state=getTodayState();
+  let doneCount=0,todayMasjid=0;
+  ITEMS.forEach(item=>{
+    const card=document.getElementById('card-'+item.id);
+    if(!card)return;
+    const check=document.getElementById('check-'+item.id);
+    const sub=document.getElementById('sub-'+item.id);
+    const isDone=!!state[item.id];
+    card.classList.toggle('done',isDone);
+    if(isDone){
+      check.innerHTML='✓';check.style.background='#2ea043';check.style.borderColor='#2ea043';check.style.color='#fff';
+      const loc=state[item.id].location;
+      let badge='';
+      if(loc==='masjid')badge='<span class="loc-badge masjid">🕌 ጀምዓ</span>';
+      else if(loc==='home')badge='<span class="loc-badge home">🏠 ቤት</span>';
+      sub.innerHTML=`⏱ ${state[item.id].time}${badge?'&nbsp;'+badge:''}`;
+      doneCount++;
+      if(FARD_IDS.includes(item.id)&&loc==='masjid')todayMasjid++;
+    }else{
+      check.innerHTML='';check.style.background='';check.style.borderColor='';check.style.color='';
+      sub.innerHTML='';
+    }
+  });
+  document.getElementById('doneCount').textContent=doneCount;
+  document.getElementById('progressCircle').style.strokeDashoffset=264-(264*doneCount/10);
+  document.getElementById('streakNum').textContent=calcStreak();
+  document.getElementById('todayMasjidCount').textContent=`${todayMasjid} / 5`;
+  const h=new Date().getHours();
+  const fM=!state['fajr']&&h>=7,iM=!state['isha']&&h>=21;
+  document.getElementById('munafiqWarn').classList.toggle('show',fM||iM);
+  updateHeaderDate();
+  checkNewAchievements();
+}
+
+// ============================================================
+// TOGGLE + LOCATION
+function toggle(id){
+  const state=getTodayState();
+  if(state[id]){setItem(id,false);render();showToast('↩️ ተሰርዟል');}
+  else if(SALAT_IDS.includes(id)){openLocationSheet(id);}
+  else{setItem(id,true,null);render();showToast('✅ ተጠናቀቀ!');
+    sendToTelegram(buildSalatMessage(id, null));
+  }
+}
+function openLocationSheet(id){
+  pendingLocationId=id;
+  const item=ITEMS.find(i=>i.id===id);
+  document.getElementById('locationSheetSubtitle').textContent=`${item.icon} ${item.name}`;
+  document.getElementById('locationSheet').classList.add('open');
+}
+function closeSheet(){document.getElementById('locationSheet').classList.remove('open');pendingLocationId=null;}
+function handleSheetClick(e){if(e.target===document.getElementById('locationSheet'))closeSheet();}
+function selectLocation(loc){
+  if(!pendingLocationId)return;
+  const sid=pendingLocationId;
+  setItem(sid,true,loc);render();
+  showToast(loc==='masjid'?'🕌 ጀምዓ — ባረካሏህ!':'🏠 ቤት — ተጠናቀቀ!');
+  closeSheet();
+  // Send to Telegram
+  sendToTelegram(buildSalatMessage(sid, loc));
+}
+
+// ============================================================
+// STREAK
+function calcStreak(){
+  const data=loadData();let streak=0;const d=new Date();
+  while(true){const key=dateKey(d);const day=data[key];
+    if(!day||Object.keys(day).length===0)break;streak++;d.setDate(d.getDate()-1);}
+  return streak;
+}
+
+function updateHeaderDate(){
+  const now=new Date();
+  const days=['እሁድ','ሰኞ','ማክሰኞ','ረቡዕ','ሐሙስ','ዓርብ','ቅዳሜ'];
+  const months=['ጃን','ፌብ','ማርች','ኤፕ','ሜይ','ጁን','ጁሉ','ኦግ','ሴፕ','ኦክቶ','ኖቬ','ዲሴ'];
+  document.getElementById('headerDate').textContent=`${days[now.getDay()]}፣ ${months[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`;
+}
+
+// ============================================================
+// QURAN
+function loadQuranData(){return JSON.parse(localStorage.getItem('quran_data')||'{}');}
+function saveQuranData(d){localStorage.setItem('quran_data',JSON.stringify(d));}
+function saveQuran(){
+  const sura=document.getElementById('quranSura').value.trim();
+  const pages=parseInt(document.getElementById('quranPages').value)||0;
+  const from=document.getElementById('quranFrom').value.trim();
+  const to=document.getElementById('quranTo').value.trim();
+  if(pages===0&&!sura){showToast('⚠️ ሱራ ወይም ፒጅ ያስፈልጋል');return;}
+  const data=loadQuranData(),key=todayKey();
+  if(!data[key])data[key]=[];
+  data[key].push({sura:sura||'—',pages,from,to,time:new Date().toLocaleTimeString('am-ET',{hour:'2-digit',minute:'2-digit'})});
+  saveQuranData(data);
+  document.getElementById('quranSura').value='';document.getElementById('quranPages').value='';
+  document.getElementById('quranFrom').value='';document.getElementById('quranTo').value='';
+  renderQuran();showToast('📖 ቁርአን ተመዝግቧል!');
+}
+function renderQuran(){
+  const data=loadQuranData(),today=data[todayKey()]||[];
+  const todayPages=today.reduce((s,e)=>s+(e.pages||0),0);
+  document.getElementById('quranTodayPages').textContent=todayPages;
+  document.getElementById('quranTodayInfo').textContent=today.length>0?`${today.length} ጊዜ ተነቧል`:'ዛሬ ምንም አልተነበበም';
+  let weekTotal=0;const now=new Date();
+  const weekKeys=[];for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);weekKeys.push(dateKey(d));}
+  weekKeys.forEach(k=>{const e=data[k]||[];weekTotal+=e.reduce((s,x)=>s+(x.pages||0),0);});
+  document.getElementById('quranWeekTotal').textContent=weekTotal+' ፒጅ';
+  const grid=document.getElementById('quranWeekGrid');grid.innerHTML='';
+  const dayN=['እ','ሰ','ማ','ረ','ሐ','ዓ','ቅ'];
+  weekKeys.forEach((k,i)=>{
+    const d2=new Date(now);d2.setDate(d2.getDate()-(6-i));
+    const e=data[k]||[];const p=e.reduce((s,x)=>s+(x.pages||0),0);
+    grid.innerHTML+=`<div class="quran-day-dot ${p>0?'has-read':''}"><span style="font-size:8px;color:var(--text-muted)">${dayN[d2.getDay()]}</span><span style="font-size:11px;font-weight:700">${p>0?p:'—'}</span></div>`;
+  });
+  const logEl=document.getElementById('quranTodayLog');
+  if(today.length===0){logEl.innerHTML='';return;}
+  logEl.innerHTML='<div class="section-title">ዛሬ ምዝገባዎች</div>'+
+    today.map((e,i)=>`<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:10px">
+      <div style="font-size:20px">📖</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${e.sura}</div>
+      <div style="font-size:10px;color:var(--text-muted)">${e.pages} ፒጅ${e.from?` · ${e.from}–${e.to}`:''} · ${e.time}</div></div>
+      <button onclick="deleteQuranEntry(${i})" style="background:none;border:none;color:var(--text-muted);font-size:15px;cursor:pointer">✕</button>
+    </div>`).join('');
+}
+function deleteQuranEntry(idx){
+  const data=loadQuranData(),key=todayKey();
+  if(data[key]){data[key].splice(idx,1);saveQuranData(data);renderQuran();showToast('🗑️ ተሰርዟል');}
+}
+
+// ============================================================
+// QADA
+function loadQada(){return JSON.parse(localStorage.getItem('qada_data')||'{}');}
+function saveQada(d){localStorage.setItem('qada_data',JSON.stringify(d));}
+
+// Accordion checklist for qada — reuse ACC_ITEMS for fard prayers
+const QADA_ACC_IDS=['fajr','dhuhr','asr','maghrib','isha','witr'];
+// witr has its own mini data
+const ACC_ITEMS_QADA = {
+  witr:{suna:[{id:'witr_s1',label:'ዊትር ሰላት (1-3 ረከዓ)',arabic:'صلاة الوتر'}],azkar:[{id:'witr_az1',label:'ዱዓ ቁኑት',arabic:'دعاء القنوت'}],quran:[]},
+};
+
+function buildQadaAccHTML(pId){
+  const acc=ACC_ITEMS[pId]||ACC_ITEMS_QADA[pId];
+  if(!acc)return '';
+  const data=loadAccData(),key=todayKey(),today=data[key]||{};
+  const prefix='qd_';
+  let html='<div class="acc-inner">';
+  const sections=[{label:'🌟 ሱና ሰላቶች',items:acc.suna},{label:'📿 አዝካር',items:acc.azkar},{label:'📖 ቁርአን',items:acc.quran}];
+  sections.forEach(sec=>{
+    if(!sec.items||sec.items.length===0)return;
+    html+=`<div class="acc-section">${sec.label}</div>`;
+    sec.items.forEach(it=>{
+      const uid=prefix+it.id;
+      const checked=!!today[uid];
+      html+=`<div class="acc-row${checked?' checked':''}" id="accrow-${uid}" onclick="toggleAccItem('${pId}','${uid}')">
+        <div class="acc-cb" id="acccb-${uid}">${checked?'✓':''}</div>
+        <div class="acc-label">${it.label}</div>
+        <div class="acc-arabic">${it.arabic}</div>
+      </div>`;
+    });
+  });
+  html+='</div>';
+  return html;
+}
+
+function toggleQadaAcc(pId){
+  const wrap=document.getElementById('qdacc-'+pId);
+  const icon=document.getElementById('qdicon-'+pId);
+  if(!wrap)return;
+  const open=wrap.classList.toggle('open');
+  if(icon)icon.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+}
+
+function renderQada(){
+  const data=loadQada();let total=0;
+  const cont=document.getElementById('qadaContainer');cont.innerHTML='';
+  QADA_PRAYERS.forEach(p=>{
+    const count=data[p.id]||0;total+=count;
+    const hasAcc=!!(ACC_ITEMS[p.id]||ACC_ITEMS_QADA[p.id]);
+    const accHTML=hasAcc?buildQadaAccHTML(p.id):'';
+    cont.innerHTML+=`<div class="qada-card">
+      <div class="qada-card-top" onclick="${hasAcc?`toggleQadaAcc('${p.id}')`:''}" style="${hasAcc?'cursor:pointer':'cursor:default'}">
+        <div style="font-size:26px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border-radius:9px;flex-shrink:0">${p.icon}</div>
+        <div class="qada-info"><div class="qada-name">${p.name} ቃዳ</div><div class="qada-count-big">${count>0?count+' ሰላት ቀርቷል':'ቃዳ የለም ✓'}</div></div>
+        <div class="qada-controls" onclick="event.stopPropagation()">
+          <button class="qada-btn add" onclick="changeQada('${p.id}',1)">+</button>
+          <div class="qada-num">${count}</div>
+          <button class="qada-btn done-btn" onclick="changeQada('${p.id}',-1)">−</button>
+        </div>
+        ${hasAcc?`<div id="qdicon-${p.id}" style="font-size:11px;color:var(--text-muted);margin-left:4px;transition:transform 0.3s;flex-shrink:0">▾</div>`:''}
+      </div>
+      ${hasAcc?`<div class="qada-acc-wrap" id="qdacc-${p.id}">${accHTML}</div>`:''}
+    </div>`;
+  });
+  document.getElementById('totalQadaNum').textContent=total;
+}
+function changeQada(id,delta){
+  const data=loadQada();data[id]=Math.max(0,(data[id]||0)+delta);saveQada(data);renderQada();
+  showToast(delta>0?'➕ ቃዳ ተጨምሯል':'✅ ቃዳ ሰገዱ — ባረካሏህ!');
+}
+
+// ============================================================
+// GOAL & CHART
+function renderGoal(){
+  const data=loadData();const now=new Date();
+  let weekMasjid=0,weekFard=0;
+  for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const k=dateKey(d);const day=data[k];
+    if(!day)continue;FARD_IDS.forEach(id=>{if(day[id]){weekFard++;if(day[id].location==='masjid')weekMasjid++;}});}
+  const goal=parseInt(localStorage.getItem('jamaa_goal')||'25');
+  const pct=Math.min(100,Math.round((weekMasjid/goal)*100));
+  document.getElementById('goalPct').textContent=pct+'%';
+  document.getElementById('goalFill').style.width=pct+'%';
+  document.getElementById('goalSubtext').textContent=`${weekMasjid} / ${goal} ሰላቶች`;
+  document.getElementById('goalStatus').textContent=pct>=100?'🎉 ዒላማ ተሳካ!':pct>=70?'💪 ጥሩ ነው!':pct>=40?'⚡ ቀጥሉ!':'📍 ጀምሩ!';
+  // Chart
+  const days=['እ','ሰ','ማ','ረ','ሐ','ዓ','ቅ'];
+  const chartEl=document.getElementById('weekChart');chartEl.innerHTML='';
+  const maxVal=5;
+  for(let i=6;i>=0;i--){
+    const d=new Date(now);d.setDate(d.getDate()-i);const k=dateKey(d);const day=data[k]||{};
+    let inMasjid=0,inHome=0;
+    FARD_IDS.forEach(id=>{if(day[id]){if(day[id].location==='masjid')inMasjid++;else inHome++;}});
+    const mH=Math.round((inMasjid/maxVal)*80),hH=Math.round((inHome/maxVal)*80);
+    chartEl.innerHTML+=`<div class="chart-bar-wrap">
+      <div class="chart-bar-stack">
+        <div style="flex:1"></div>
+        <div class="chart-bar-home" style="height:${hH}px"></div>
+        <div class="chart-bar-masjid" style="height:${mH}px"></div>
+      </div>
+      <div class="chart-day-label">${days[d.getDay()]}</div>
+    </div>`;
+  }
+}
+function saveGoal(){
+  const v=parseInt(document.getElementById('goalInput').value);
+  if(!v||v<1){showToast('⚠️ ዒላማ ያስፈልጋል');return;}
+  localStorage.setItem('jamaa_goal',v);renderGoal();showToast('🎯 ዒላማ ተቀምጧል!');
+  document.getElementById('goalInput').value='';
+}
+
+// ============================================================
+// STATS
+function renderStats(){
+  const data=loadData(),keys=Object.keys(data).sort();
+  let totalDone=0,perfectDays=0,masjidTotal=0,fardTotal=0;
+  const counts={};ITEMS.forEach(i=>counts[i.id]=0);
+  const masjidByPrayer={};FARD_IDS.forEach(id=>masjidByPrayer[id]=0);
+  keys.forEach(k=>{const day=data[k];const n=Object.keys(day).length;totalDone+=n;if(n===10)perfectDays++;
+    ITEMS.forEach(i=>{if(day[i.id])counts[i.id]++;});
+    FARD_IDS.forEach(id=>{if(day[id]){fardTotal++;if(day[id].location==='masjid'){masjidTotal++;masjidByPrayer[id]++;}}});
+  });
+  document.getElementById('stat-days').textContent=keys.length;
+  document.getElementById('stat-streak').textContent=calcStreak();
+  document.getElementById('stat-perfect').textContent=perfectDays;
+  document.getElementById('stat-total').textContent=totalDone;
+  const masjidPct=fardTotal>0?Math.round((masjidTotal/fardTotal)*100):0;
+  const pN={fajr:'ፈጅር',dhuhr:'ዙህር',asr:'አስር',maghrib:'መግሪብ',isha:'ዒሻ'};
+  const pI={fajr:'🌄',dhuhr:'🕛',asr:'🌤️',maghrib:'🌇',isha:'🌃'};
+  document.getElementById('masjidStatsContainer').innerHTML=`
+    <div class="masjid-target-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:12px;font-weight:700">ፈርዶች ጀምዓ/መስጊድ</div><div style="font-size:10px;color:var(--text-muted);margin-top:1px">${masjidTotal}/${fardTotal}</div></div>
+        <div style="font-size:22px;font-weight:700;color:var(--gold-light)">${masjidPct}%</div>
+      </div>
+      <div class="masjid-track"><div class="masjid-fill" style="width:${masjidPct}%"></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px">
+      ${FARD_IDS.map(id=>{const t=counts[id]||0;const m=masjidByPrayer[id]||0;const p=t>0?Math.round((m/t)*100):0;
+        return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px 5px;text-align:center">
+          <div style="font-size:16px">${pI[id]}</div>
+          <div style="font-size:9px;color:var(--text-muted);margin-top:2px">${pN[id]}</div>
+          <div style="font-size:12px;font-weight:700;color:var(--gold);margin-top:1px">${p}%</div>
+          <div style="font-size:8px;color:var(--text-muted)">${m}/${t}</div></div>`;}).join('')}
+    </div>`;
+  // Weekly report
+  const now=new Date();let wFard=0,wMasjid=0,wJamaa=0,wPerfect=0,wDays=0;
+  for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const k=dateKey(d);const day=data[k];
+    if(!day)continue;wDays++;if(Object.keys(day).length===10)wPerfect++;
+    FARD_IDS.forEach(id=>{if(day[id]){wFard++;if(day[id].location==='masjid')wMasjid++;}});
+    if(day['jamaa'])wJamaa++;}
+  const wPct=wFard>0?Math.round((wMasjid/wFard)*100):0;
+  document.getElementById('weeklyReportContainer').innerHTML=`
+    <div class="week-report-card">
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px">📅 ያለፉ 7 ቀናት</div>
+      <div class="week-row"><span class="week-label">ምዝገባ ቀናት</span><span class="week-val">${wDays}/7</span></div>
+      <div class="week-row"><span class="week-label">ሙሉ ቀናት ⭐</span><span class="week-val ${wPerfect>=5?'good':''}">${wPerfect}</span></div>
+      <div class="week-row"><span class="week-label">🕌 ጀምዓ %</span><span class="week-val ${wPct>=80?'good':wPct>=40?'':'bad'}">${wPct}%</span></div>
+      <div class="week-row"><span class="week-label">ጀምዓ ሰላት ቀን</span><span class="week-val">${wJamaa}</span></div>
+    </div>`;
+  const total=keys.length||1;
+  document.getElementById('barsContainer').innerHTML=ITEMS.map(item=>{
+    const pct=Math.round((counts[item.id]/total)*100);
+    return `<div class="bar-row"><div class="bar-label"><span>${item.icon} ${item.name}</span><span>${pct}%</span></div>
+      <div class="bar-track"><div class="bar-fill ${item.group==='azkar'?'green':''}" style="width:${pct}%"></div></div></div>`;
+  }).join('');
+}
+
+// ============================================================
+// CALENDAR
+function renderCalendar(){
+  const data=loadData();
+  const months=['ጃንዋሪ','ፌብሩወሪ','ማርች','ኤፕሪል','ሜይ','ጁን','ጁላይ','ኦገስት','ሴፕቴምበር','ኦክቶበር','ኖቬምበር','ዲሴምበር'];
+  document.getElementById('calTitle').textContent=`${months[calendarMonth]} ${calendarYear}`;
+  const firstDay=new Date(calendarYear,calendarMonth,1).getDay();
+  const daysInMonth=new Date(calendarYear,calendarMonth+1,0).getDate();
+  const todayStr=todayKey();
+  let html='';
+  for(let i=0;i<firstDay;i++)html+='<div class="cal-day empty"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const key=`${calendarYear}-${String(calendarMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const day=data[key];
+    const isToday=key===todayStr;
+    let cls='',dot='';
+    if(day){const n=Object.keys(day).length;
+      if(n===10){cls='perfect';dot='⭐';}
+      else if(n>=7){cls='good';dot='✓';}
+      else if(n>=4){cls='partial';dot='·';}
+      else{cls='missed';dot='○';}
+    }
+    html+=`<div class="cal-day ${cls} ${isToday?'today':''}">
+      <span class="cal-day-num">${d}</span>
+      <span class="cal-day-dot">${dot}</span>
+    </div>`;
+  }
+  document.getElementById('calGrid').innerHTML=html;
+}
+function changeMonth(delta){
+  calendarMonth+=delta;
+  if(calendarMonth>11){calendarMonth=0;calendarYear++;}
+  if(calendarMonth<0){calendarMonth=11;calendarYear--;}
+  renderCalendar();
+}
+
+// ============================================================
+// ACHIEVEMENTS
+function calcAchStats(){
+  const data=loadData(),qData=loadQuranData();
+  const keys=Object.keys(data).sort();
+  let streak=calcStreak(),perfect=0,totalDays=keys.length,jamaa7=0,jamaa30=0,fajr30=0,quranDays=0;
+  const now=new Date();
+  // jamaa consecutive
+  let j7=0,j30=0;
+  for(let i=0;i<30;i++){
+    const d=new Date(now);d.setDate(d.getDate()-i);const k=dateKey(d);const day=data[k];
+    if(!day)break;
+    const allFard=FARD_IDS.every(id=>day[id]&&day[id].location==='masjid');
+    if(i<7&&allFard)j7++;if(allFard)j30++;
+  }
+  keys.forEach(k=>{const day=data[k];if(Object.keys(day).length===10)perfect++;
+    const allFard=FARD_IDS.every(id=>day[id]&&day[id].location==='masjid');if(allFard)jamaa30++;
+    if(day['fajr'])fajr30++;
+    if(qData[k]&&qData[k].length>0)quranDays++;
+  });
+  // jamaa7 consecutive
+  let cj7=0;
+  for(let i=0;i<7;i++){const d=new Date(now);d.setDate(d.getDate()-i);const k=dateKey(d);const day=data[k];
+    if(!day)break;if(FARD_IDS.every(id=>day[id]&&day[id].location==='masjid'))cj7++;else break;}
+  return{streak,perfect,totalDays,jamaa7:cj7,jamaa30,fajr30,quranDays};
+}
+function renderAchievements(){
+  const stats=calcAchStats();
+  const grid=document.getElementById('achGrid');grid.innerHTML='';
+  const prev=JSON.parse(localStorage.getItem('ach_unlocked')||'[]');
+  ACHIEVEMENTS.forEach(a=>{
+    const unlocked=a.check(stats);
+    const val=a.val(stats),pct=Math.round((val/a.max)*100);
+    grid.innerHTML+=`<div class="ach-card ${unlocked?'unlocked':'locked'}">
+      <div class="ach-icon">${a.icon}</div>
+      <div class="ach-name">${a.name}</div>
+      <div class="ach-desc">${a.desc}</div>
+      <div class="ach-progress"><div class="ach-progress-fill" style="width:${pct}%"></div></div>
+      <div style="font-size:9px;color:var(--text-muted);margin-top:4px">${val}/${a.max}</div>
+    </div>`;
+  });
+  // Check new unlocks
+  const now=ACHIEVEMENTS.filter(a=>a.check(stats)).map(a=>a.id);
+  const newOnes=now.filter(id=>!prev.includes(id));
+  if(newOnes.length>0){
+    const names=newOnes.map(id=>ACHIEVEMENTS.find(a=>a.id===id)?.name).filter(Boolean);
+    showToast('🏅 '+names.join(', ')+' — ሽልማት!');
+    localStorage.setItem('ach_unlocked',JSON.stringify(now));
+  }
+}
+function checkNewAchievements(){
+  const stats=calcAchStats();
+  const prev=JSON.parse(localStorage.getItem('ach_unlocked')||'[]');
+  const now=ACHIEVEMENTS.filter(a=>a.check(stats)).map(a=>a.id);
+  const newOnes=now.filter(id=>!prev.includes(id));
+  if(newOnes.length>0){
+    const names=newOnes.map(id=>ACHIEVEMENTS.find(a=>a.id===id)?.name).filter(Boolean);
+    setTimeout(()=>showToast('🏅 '+names.join(', ')+' — አዲስ ሽልማት!'),800);
+    localStorage.setItem('ach_unlocked',JSON.stringify(now));
+  }
+}
+
+// ============================================================
+// HISTORY
+function renderHistory(){
+  const data=loadData(),keys=Object.keys(data).sort().reverse().slice(0,30);
+  const list=document.getElementById('historyList');
+  if(keys.length===0){list.innerHTML='<p style="color:var(--text-muted);font-size:12px;text-align:center;margin-top:30px">ታሪክ የለም</p>';return;}
+  list.innerHTML=keys.map(k=>{const day=data[k];const count=Object.keys(day).length;
+    const masjidCount=FARD_IDS.filter(id=>day[id]&&day[id].location==='masjid').length;
+    const badges=ITEMS.map(item=>`<span class="badge ${day[item.id]?'done':''}">${item.icon}</span>`).join('');
+    return `<div class="history-row">
+      <div><div class="history-date">${k}</div>
+      <div class="history-sub">${count}/10 ✓${masjidCount>0?` · 🕌 ${masjidCount}`:''} ${count===10?'⭐':''}</div></div>
+      <div class="history-badges">${badges}</div></div>`;
+  }).join('');
+}
+
+// ============================================================
+// REMINDERS
+function renderReminders(){
+  const saved=JSON.parse(localStorage.getItem('salat_reminders')||'{}');
+  const cont=document.getElementById('remindersContainer');cont.innerHTML='';
+  ITEMS.forEach(item=>{
+    const r=saved[item.id]||{on:false,time:item.defaultTime};
+    cont.innerHTML+=`<div class="reminder-card">
+      <div class="reminder-header">
+        <div style="display:flex;align-items:center;gap:9px">
+          <span style="font-size:18px">${item.icon}</span>
+          <div><div class="reminder-title">${item.name}</div><div style="font-size:10px;color:var(--text-muted)">${item.arabic}</div></div>
+        </div>
+        <button class="toggle ${r.on?'on':''}" id="tog-${item.id}" onclick="toggleReminder('${item.id}')"></button>
+      </div>
+      <input type="time" class="time-input" id="time-inp-${item.id}" value="${r.time}" onchange="saveReminder('${item.id}')">
+    </div>`;
+  });
+}
+function toggleReminder(id){
+  const saved=JSON.parse(localStorage.getItem('salat_reminders')||'{}');
+  if(!saved[id])saved[id]={on:false,time:ITEMS.find(i=>i.id===id).defaultTime};
+  saved[id].on=!saved[id].on;localStorage.setItem('salat_reminders',JSON.stringify(saved));
+  document.getElementById('tog-'+id).classList.toggle('on',saved[id].on);
+  if(saved[id].on)Notification.requestPermission().then(p=>showToast(p==='granted'?'🔔 ማሳወቂያ ተቃኘ!':'⚠️ ፍቃድ አልተሰጠም'));
+}
+function saveReminder(id){
+  const saved=JSON.parse(localStorage.getItem('salat_reminders')||'{}');
+  if(!saved[id])saved[id]={on:false};saved[id].time=document.getElementById('time-inp-'+id).value;
+  localStorage.setItem('salat_reminders',JSON.stringify(saved));showToast('💾 ተቀምጧል');
+}
+
+// ============================================================
+// ============================================================
+// TELEGRAM BACKUP — sendDocument (JSON file)
+async function backupToTelegram(){
+  showToast('📤 እየላከ...');
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+  const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  const payload = {
+    app: 'salat-azkar-tracker',
+    version: '9',
+    date: now.toISOString(),
+    salat: loadData(),
+    quran: loadQuranData(),
+    qada: loadQada(),
+    acc: loadAccData(),
+    goal: localStorage.getItem('jamaa_goal'),
+    streak: calcStreak()
+  };
+
+  const fileName = `salat_backup_${dateStr}.json`;
+  const jsonStr = JSON.stringify(payload, null, 2);
+  const blob = new Blob([jsonStr], {type:'application/json'});
+
+  // caption message
+  const caption = `🕌 <b>ሰላት Backup</b>\n📅 ${now.toLocaleDateString('am-ET')} — ${timeStr}\n🔥 ስትሪክ: ${payload.streak} ቀናት\n📦 ሰላቶች፣ ቃዳ፣ ቁርአን፣ አዝካር`;
+
+  const form = new FormData();
+  form.append('chat_id', TG_CHAT);
+  form.append('document', blob, fileName);
+  form.append('caption', caption);
+  form.append('parse_mode', 'HTML');
+
+  try{
+    const r = await fetch(`https://api.telegram.org/bot${TG_BOT}/sendDocument`,{method:'POST',body:form});
+    const j = await r.json();
+    if(j.ok) showToast('✅ Telegram ተላከ! 📁');
+    else showToast('❌ ' + (j.description||'አልተላከም'));
+  }catch(e){showToast('❌ Network error');}
+}
+
+// Import JSON backup file from device
+function importBackupFile(event){
+  const file = event.target.files[0];
+  if(!file){return;}
+  const status = document.getElementById('importStatus');
+  status.textContent = '⏳ እየተነበበ...';
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const p = JSON.parse(e.target.result);
+      let restored = [];
+      if(p.salat){saveData(p.salat);restored.push('ሰላቶች');}
+      if(p.quran){saveQuranData(p.quran);restored.push('ቁርአን');}
+      if(p.qada){saveQada(p.qada);restored.push('ቃዳ');}
+      if(p.acc){saveAccData(p.acc);restored.push('አዝካር');}
+      if(p.goal){localStorage.setItem('jamaa_goal',p.goal);}
+      render();renderQuran();renderQada();renderGoal();
+      status.textContent = '✅ ተመለሰ: ' + restored.join('፣ ');
+      showToast('✅ Backup ተ restore ሆነ!');
+    }catch(err){
+      status.textContent = '❌ ፋይሉ ትክክል አይደለም';
+      showToast('❌ JSON ትክክል አይደለም');
+    }
+    event.target.value=''; // reset input
+  };
+  reader.readAsText(file);
+}
+
+// ============================================================
+// HADITH
+function openHadith(){
+  const h=HADITHS[new Date().getDate()%HADITHS.length];
+  document.getElementById('hadithArabic').textContent=h.arabic;
+  document.getElementById('hadithAmharic').textContent=h.amharic;
+  document.getElementById('hadithSource').textContent='📚 '+h.source;
+  document.getElementById('hadithModal').classList.add('open');
+}
+function closeHadith(){document.getElementById('hadithModal').classList.remove('open');}
+function handleHadithClick(e){if(e.target===document.getElementById('hadithModal'))closeHadith();}
+
+// ============================================================
+// PAGE NAV
+function showPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
+  if(name==='stats')renderStats();
+  if(name==='history')renderHistory();
+  if(name==='settings')renderReminders();
+  if(name==='quran')renderQuran();
+  if(name==='qada')renderQada();
+  if(name==='goal')renderGoal();
+  if(name==='calendar')renderCalendar();
+  if(name==='achievements')renderAchievements();
+}
+
+// ============================================================
+// TOAST
+let toastTimer;
+function showToast(msg){
+  const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2400);
+}
+
+// ============================================================
+// RESET
+function resetToday(){if(!confirm('ዛሬ ዳታ ሰርዞ ዳግም ይጀምር?'))return;const data=loadData();delete data[todayKey()];saveData(data);render();showToast('🗑️ ዛሬ ዳታ ተሰርዟል');}
+function resetAll(){if(!confirm('ሁሉም ዳታ ይሰረዝ?'))return;localStorage.removeItem('salat_data');render();showToast('🗄️ ሁሉም ዳታ ተሰርዟል');}
+
+// ============================================================
+// PWA
+function isInstalled(){
+  return window.matchMedia('(display-mode: standalone)').matches||
+         window.navigator.standalone===true||
+         localStorage.getItem('pwa_installed')==='1';
+}
+function hideBanner(){
+  const b=document.getElementById('installFab');
+  if(b)b.classList.add('hidden');
+}
+// Hide immediately if already installed
+if(isInstalled()){hideBanner();}
+
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  installPrompt=e;
+  if(!isInstalled())document.getElementById('installFab').classList.remove('hidden');
+});
+
+window.addEventListener('appinstalled',()=>{
+  localStorage.setItem('pwa_installed','1');
+  hideBanner();
+  showToast('📲 ተጭኗል! አሁን አፕ ሆኗል ✅');
+});
+
+async function doInstall(){
+  if(!installPrompt)return;
+  installPrompt.prompt();
+  const r=await installPrompt.userChoice;
+  if(r.outcome==='accepted'){
+    localStorage.setItem('pwa_installed','1');
+    hideBanner();
+    showToast('📲 ተጭኗል!');
+  }
+  installPrompt=null;
+}
+
+// ============================================================
+// SERVICE WORKER
+if('serviceWorker' in navigator){
+  const swCode=`
+self.addEventListener('install',e=>self.skipWaiting());
+self.addEventListener('activate',e=>self.clients.claim());
+self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
+  const blob=new Blob([swCode],{type:'application/javascript'});
+  const swUrl=URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(()=>{});
+}
+
+// ============================================================
+// NOTIFICATIONS — mosque alert (15 min before) + prayer time alert
+let _notifTimers = [];
+
+function clearNotifTimers(){
+  _notifTimers.forEach(t=>clearTimeout(t));
+  _notifTimers=[];
+}
+
+async function requestNotifPermission(){
+  if(!('Notification' in window))return false;
+  if(Notification.permission==='granted')return true;
+  const p=await Notification.requestPermission();
+  return p==='granted';
+}
+
+function scheduleNotifications(){
+  clearNotifTimers();
+  if(!('Notification' in window)||Notification.permission!=='granted')return;
+
+  // Fard prayer IDs and their display info
+  const FARD_NOTIF=[
+    {id:'fajr',   name:'ፈጅር ሰላት',   arabic:'الفجر',  icon:'🌄'},
+    {id:'dhuhr',  name:'ዙህር ሰላት',   arabic:'الظهر',  icon:'🕛'},
+    {id:'asr',    name:'አስር ሰላት',   arabic:'العصر',  icon:'🌤️'},
+    {id:'maghrib',name:'መግሪብ ሰላት', arabic:'المغرب', icon:'🌇'},
+    {id:'isha',   name:'ዒሻ ሰላት',    arabic:'العشاء', icon:'🌃'},
+  ];
+
+  const times = prayerTimesData || PRAYER_SCHEDULE;
+
+  FARD_NOTIF.forEach(p=>{
+    const tStr = times[p.id];
+    if(!tStr)return;
+    const [ph,pm]=tStr.split(':').map(Number);
+    const now=new Date();
+
+    // ── 1) 15-minute "go to mosque" alert ──
+    const alertTime=new Date();
+    alertTime.setHours(ph,pm-15,0,0);
+    if(alertTime.getTime()-now.getTime()<0)alertTime.setDate(alertTime.getDate()+1);
+    const alertDelay=alertTime-now;
+
+    const t1=setTimeout(()=>{
+      const state=getTodayState();
+      if(!state[p.id]){
+        new Notification(`🕌 ወደ መስጊድ ሂድ! — ${p.name}`,{
+          body:`${p.icon} ${p.name} (${tStr}) ከ15 ደቂቃ ውስጥ ነው። አሁን ወደ ጀምዓ ሂድ!`,
+          icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">🕌</text></svg>',
+          badge:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">🕌</text></svg>',
+          tag:'mosque-alert-'+p.id,
+          requireInteraction:true,
+          vibrate:[200,100,200,100,400]
+        });
+      }
+    },alertDelay);
+    _notifTimers.push(t1);
+
+    // ── 2) Prayer time alert (at exact time) ──
+    const prayerTime=new Date();
+    prayerTime.setHours(ph,pm,0,0);
+    if(prayerTime.getTime()-now.getTime()<0)prayerTime.setDate(prayerTime.getDate()+1);
+    const prayerDelay=prayerTime-now;
+
+    const t2=setTimeout(()=>{
+      const state=getTodayState();
+      if(!state[p.id]){
+        new Notification(`${p.icon} ${p.name} ሰዓት ደረሰ — الله أكبر`,{
+          body:`${p.arabic} · ${tStr} — ሰላትዎን አይዘንጉ! الصلاة خير من النوم`,
+          tag:'prayer-time-'+p.id,
+          requireInteraction:true,
+          vibrate:[400,100,400,100,800]
+        });
+        // Re-schedule for next day
+        scheduleNotifications();
+      }
+    },prayerDelay);
+    _notifTimers.push(t2);
+  });
+
+  // Also keep custom reminder-based notifications (settings page toggles)
+  const saved=JSON.parse(localStorage.getItem('salat_reminders')||'{}');
+  ITEMS.forEach(item=>{
+    const r=saved[item.id];if(!r||!r.on||!r.time)return;
+    const[h,m]=r.time.split(':').map(Number);
+    const now=new Date(),target=new Date();
+    target.setHours(h,m,0,0);
+    if(target<=now)target.setDate(target.getDate()+1);
+    const t3=setTimeout(()=>{
+      const state=getTodayState();
+      if(!state[item.id])new Notification('ሰላት ⏰',{body:`${item.icon} ${item.name} ጊዜ ነው`,vibrate:[300,100,300]});
+    },target-now);
+    _notifTimers.push(t3);
+  });
+}
+
+// Request permission on first load + show status in settings
+async function initNotifications(){
+  const granted=await requestNotifPermission();
+  scheduleNotifications();
+  // Update permission badge if settings page has one
+  const badge=document.getElementById('notifPermBadge');
+  if(badge)badge.textContent=granted?'✅ ፈቃድ ተሰጥቷል':'❌ ፈቃድ ያስፈልጋል';
+}
+
+// ============================================================
+// SHEIKH AI
+let sheikhHistory = [];
+let sheikhBusy = false;
+
+function openSheikhModal(){
+  document.getElementById('sheikhModal').classList.add('open');
+  setTimeout(()=>document.getElementById('sheikhInput').focus(),400);
+}
+function closeSheikhModal(){
+  document.getElementById('sheikhModal').classList.remove('open');
+}
+function handleSheikhModalClick(e){
+  if(e.target===document.getElementById('sheikhModal'))closeSheikhModal();
+}
+
+function sheikhKeydown(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendSheikhMessage();}
+}
+
+function appendSheikhMsg(text, role){
+  const box = document.getElementById('sheikhMessages');
+  const div = document.createElement('div');
+  div.className = 'sheikh-msg ' + (role==='ai'?'ai':'user');
+  div.innerHTML = text.replace(/\n/g,'<br>');
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
+
+function getSalatSummary(){
+  const state = getTodayState();
+  const done = [], missed = [];
+  ITEMS.forEach(item=>{
+    if(state[item.id]) done.push(item.name + (state[item.id].location==='masjid'?' (ጀምዓ)':state[item.id].location==='home'?' (ቤት)':''));
+    else missed.push(item.name);
+  });
+  const streak = calcStreak();
+  return `ዛሬ ${todayKey()} — ስትሪክ: ${streak} ቀናት\n✅ ተሰግዷል: ${done.join('، ') || 'ምንም'}\n❌ አልሰገደም: ${missed.join('، ') || 'ሁሉም ተሰግዷል'}`;
+}
+
+async function sendSheikhStats(){
+  if(sheikhBusy) return;
+  const summary = getSalatSummary();
+  appendSheikhMsg('📊 ' + summary, 'user');
+  await callSheikhAI(`ዛሬ ሰላቶቼ ሁኔታ ይህ ነው:\n${summary}\n\nከዚህ ሁኔታ አይተህ እንደ ሼክ ምክር ስጠኝ። ሙስሊም ወጣት ነኝ።`);
+}
+
+async function sendSheikhMessage(){
+  if(sheikhBusy) return;
+  const input = document.getElementById('sheikhInput');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  appendSheikhMsg(text, 'user');
+  sheikhHistory.push({role:'user', content: text});
+  await callSheikhAI(null);
+}
+
+async function callSheikhAI(overrideUserMsg){
+  sheikhBusy = true;
+  document.getElementById('sheikhSend').disabled = true;
+
+  const typingDiv = appendSheikhMsg('✍️ ሼክ AI እየጻፈ...', 'ai');
+  typingDiv.classList.add('typing');
+
+  const salatCtx = getSalatSummary();
+
+  const systemPrompt = `አንተ ሼክ AI ነህ — አማርኛ ተናጋሪ ሙስሊም ወጣቶች ምክር የምትሰጥ AI ሼክ።
+
+ደንቦቸ:
+- ሁሌ አማርኛ ተናገር (አረብኛ ጥቅሶችን ከአማርኛ ትርጉም ጋር ጨምር)
+- ቁርአን ወይም ሶሒህ ሃዲስ ጠቅሰህ ምክር ስጥ
+- ሙስሊም ወጣት ሕይወት ተረዳ — ትምህርት፣ ሶሻል ሚዲያ፣ ጓደኛ፣ ቤተሰብ ጫና
+- ቀልጣፋ፣ ቀጥተኛ፣ እና ርህሩህ ሁን
+- ትልቅ ፋትዋ ከሆነ "ወደ ሙስሊም ዕውቁ ሼክ ጠይቅ" ምከር
+- ሰላቱ ዳታ ካለ አሁን ሁኔታ ጠቅሰህ ምክር ስጥ
+- ማጠቃለያ ዱዓ ወይም አዝካር ጨምር
+
+ዛሬ ሰላቶቼ: ${salatCtx}`;
+
+  let messages = [...sheikhHistory];
+  if(overrideUserMsg){
+    messages = [...sheikhHistory, {role:'user', content: overrideUserMsg}];
+    sheikhHistory.push({role:'user', content: overrideUserMsg});
+  }
+
+  try{
+    const resp = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system: systemPrompt,
+        messages: messages.slice(-10) // Keep last 10 turns
+      })
+    });
+    const data = await resp.json();
+    const reply = data.content?.map(b=>b.text||'').join('') || '❌ መልስ አልመጣም።';
+    typingDiv.remove();
+    appendSheikhMsg(reply, 'ai');
+    sheikhHistory.push({role:'assistant', content: reply});
+  } catch(e){
+    typingDiv.remove();
+    appendSheikhMsg('❌ ኔትዎርክ ችግር። ዳግም ይሞክሩ።', 'ai');
+  }
+
+  sheikhBusy = false;
+  document.getElementById('sheikhSend').disabled = false;
+}
+
+// ============================================================
+// INIT
+buildCards();
+render();
+renderQuran();
+renderQada();
+renderCalendar();
+initNotifications();
+updateCountdown();
+setInterval(updateCountdown,1000);
+
+// Load prayer times
+const savedPT=localStorage.getItem('prayer_times');
+if(savedPT){const p=JSON.parse(savedPT);if(p.date===todayKey())prayerTimesData=p.data;}
+fetchPrayerTimes().then(()=>scheduleNotifications());
+
+// Daily hadith on first open
+if(localStorage.getItem('hadith_shown_date')!==todayKey()){
+  setTimeout(()=>{openHadith();localStorage.setItem('hadith_shown_date',todayKey());},900);
+}
+</script>
+</body>
+</html>
